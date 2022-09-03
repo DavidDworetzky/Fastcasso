@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 torch = "*"
+diffusers = "*"
+transformers = "*"
+scipy = "*"
 
 [dev-packages]
 
