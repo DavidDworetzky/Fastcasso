@@ -17,7 +17,7 @@ def forward(self:BasicTransformerBlock, x, context=None):
 
 
 model_id = "CompVis/stable-diffusion-v1-4"
-device = "cuda"
+device = "mps"
 
 
 pipe = StableDiffusionPipeline.from_pretrained(model_id, use_auth_token=True)

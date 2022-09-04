@@ -1,6 +1,7 @@
 name: stablediffusion
 channels:
   - pytorch
+  - fastai
   - conda-forge
   - defaults
 dependencies:
@@ -13,6 +14,7 @@ dependencies:
   - colorama=0.4.5=pyhd8ed1ab_0
   - cryptography=37.0.4=py310h94bb23d_0
   - diffusers=0.2.4=pyhd8ed1ab_0
+  - fastcore=1.5.24=py_0
   - ffmpeg=4.2.2=h04105a8_0
   - filelock=3.8.0=pyhd8ed1ab_0
   - freetype=2.12.1=hd633e50_0
