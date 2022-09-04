@@ -1,5 +1,8 @@
 "# StableDiffusionSamples" 
 # How to Run
-1. `Pip install pipenv`
-2. `Pipenv install`
+## On Mac M1
+1. `conda install -c conda-forge diffusers`
+2. `conda install pytorch torchvision torchaudio -c pytorch`
 3. `huggingface-cli login`
+
+## On Windows
