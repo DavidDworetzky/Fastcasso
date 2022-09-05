@@ -3,25 +3,34 @@ channels:
   - anaconda
   - pytorch-nightly
   - fastai
+  - conda-forge
   - defaults
 dependencies:
   - blas=1.0=openblas
   - brotlipy=0.7.0=py310h1a28f6b_1002
   - bzip2=1.0.8=h620ffc9_4
-  - ca-certificates=2022.07.19=hca03da5_0
-  - certifi=2022.6.15=py310hca03da5_0
+  - ca-certificates=2022.6.15=h4653dfc_0
+  - certifi=2022.6.15=pyhd8ed1ab_1
   - cffi=1.15.1=py310h22df2f2_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
+  - click=7.1.2=pyh9f0ad1d_0
+  - colorama=0.4.5=pyhd8ed1ab_0
   - cryptography=37.0.1=py310h834c97f_0
+  - diffusers=0.2.4=pyhd8ed1ab_0
   - fastcore=1.5.24=py_0
   - ffmpeg=4.2.2=h04105a8_0
+  - filelock=3.8.0=pyhd8ed1ab_0
   - freetype=2.11.0=h1192e45_0
   - gettext=0.21.0=h826f4ad_0
   - giflib=5.2.1=h1a28f6b_0
   - gmp=6.2.1=hc377ac9_3
   - gnutls=3.6.15=h887c41c_0
+  - huggingface_hub=0.9.1=pyhd8ed1ab_0
   - icu=68.1=hc377ac9_0
   - idna=3.3=pyhd3eb1b0_0
+  - importlib-metadata=2.0.0=py_1
+  - importlib_metadata=2.0.0=1
+  - joblib=1.1.0=pyhd8ed1ab_0
   - jpeg=9e=h1a28f6b_0
   - lame=3.100=h1a28f6b_0
   - lcms2=2.12=hba8e193_0
@@ -50,7 +59,7 @@ dependencies:
   - numpy=1.23.1=py310h220015d_0
   - numpy-base=1.23.1=py310h742c864_0
   - openh264=1.8.0=h98b2900_0
-  - openssl=1.1.1q=h1a28f6b_0
+  - openssl=1.1.1q=ha287fd2_0
   - packaging=21.3=pyhd3eb1b0_0
   - pillow=9.2.0=py310h4d1bdd5_1
   - pip=22.1.2=py310hca03da5_0
@@ -61,19 +70,30 @@ dependencies:
   - python=3.10.4=hbdb9e5c_0
   - pytorch=1.13.0.dev20220904=py3.10_0
   - readline=8.1.2=h1a28f6b_1
+  - regex=2022.7.9=py310h1a28f6b_0
   - requests=2.28.1=py310hca03da5_0
+  - sacremoses=0.0.53=pyhd8ed1ab_0
   - scipy=1.7.3=py310h3c8eff0_0
   - setuptools=63.4.1=py310hca03da5_0
+  - six=1.16.0=pyh6c4a22f_0
   - sqlite=3.39.2=h1058600_0
   - tk=8.6.12=hb8d0fd4_0
+  - tokenizers=0.11.4=py310h5c5695e_1
   - torchaudio=0.13.0.dev20220904=py310_cpu
   - torchvision=0.14.0.dev20220904=py310_cpu
+  - tqdm=4.64.1=pyhd8ed1ab_0
+  - transformers=4.18.0=py310hca03da5_0
+  - typing-extensions=4.3.0=py310hca03da5_0
   - typing_extensions=4.3.0=py310hca03da5_0
   - tzdata=2022a=hda174b7_0
   - urllib3=1.26.11=py310hca03da5_0
   - wheel=0.37.1=pyhd3eb1b0_0
   - x264=1!152.20180806=h1a28f6b_0
   - xz=5.2.5=h1a28f6b_1
+  - yaml=0.2.5=h3422bc3_2
+  - zipp=3.8.1=pyhd8ed1ab_0
   - zlib=1.2.12=h5a0b063_2
   - zstd=1.5.2=h8574219_0
+  - pip:
+    - pyyaml==6.0
 prefix: /Users/daviddworetzky/opt/miniconda3/envs/stablediffusion
