@@ -1,0 +1,4 @@
+outputs/*.png
+outputs/*.json
+*.pyc
+.DS_Store

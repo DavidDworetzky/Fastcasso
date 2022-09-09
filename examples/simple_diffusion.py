@@ -7,8 +7,14 @@ import torch
 import torch.nn as nn
 
 from transformers import CLIPConfig
+import image_input
 
-flag_safety = True
+inputs = [image_input.image_input(prompt='Waitress at oktoberfest, spring colors, photograph, Munich Germany, 8k, realistic', name = 'interesting1.png'),
+image_input.image_input(prompt='New York City in Fall, rainy, times square, realistic', name = 'interesting2.png'),
+image_input.image_input(prompt='Angel wreathed in flame with golden armor, unreal engine, high octane render, trending, 8k', name = 'interesting3.png')]
+
+
+flag_safety = False
 class StableDiffusionTrivialSafetyChecker(object):
     config_class = CLIPConfig
 
@@ -45,8 +51,10 @@ if not flag_safety:
     pipe.safety_checker = safety_checker.safety_check
 pipe = pipe.to(device)
 
-prompt = "An astronaut riding a horse on mars."
-with autocast("cpu"):
-    image = pipe(prompt, guidance_scale=7.5)["sample"][0]  
+for input in inputs:
+
+    prompt = input.prompt
+    with autocast("cpu"):
+        image = pipe(prompt, guidance_scale=7.5)["sample"][0]  
     
-image.save("output.png")
+    image.save(input.name)
