@@ -1,4 +1,5 @@
 #framework
+import sys
 from fastapi import FastAPI, HTTPException
 from app.models.image_input import ImageInput
 import uvicorn
@@ -36,8 +37,7 @@ async def generate_image(prompt, name):
             )
         )
         image = stable_diffusion.generate(input)
-        res, im_jpg = cv2.imencode(".png", image)
-        return StreamingResponse(io.BytesIO(im_jpg.tobytes()), media_type="image/png")
+        return StreamingResponse(io.BytesIO(image.tobytes()), media_type="image/png")
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"{e}")

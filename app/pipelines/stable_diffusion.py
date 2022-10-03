@@ -7,7 +7,7 @@ import numpy as np
 import torch.nn as nn
 
 from transformers import CLIPConfig
-from stable_diffusion_trivial_safety_checker import StableDiffusionTrivialSafetyChecker
+from app.pipelines.stable_diffusion_trivial_safety_checker import StableDiffusionTrivialSafetyChecker
 from app.models.image_input import ImageInput
 
 from diffusers.models.attention import BasicTransformerBlock
@@ -37,7 +37,7 @@ class StableDiffusion:
             pipe.safety_checker = self.safety_checker.safety_check
         pipe = pipe.to(self.device)
         with autocast("cpu"):
-            image = self.pipe(prompt, guidance_scale=self.guidance_scale)["sample"][0]  
+            image = pipe(prompt, guidance_scale=self.guidance_scale)["sample"][0]  
         
         image.save(name)
         return image
