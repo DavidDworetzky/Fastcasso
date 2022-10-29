@@ -1,5 +1,6 @@
 # Fastcasso
-Fastcasso is a project intended to make image gen, image to image, and art generation available in a neat fastapi package
+Fastcasso is a web server for diffusion and GAN based image generation. 
+Fastcasso makes running stable diffusion on a web server easy and fast.
 # How to Run
 
 1. `uvicorn main:app --reload`
