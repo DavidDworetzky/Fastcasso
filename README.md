@@ -9,8 +9,8 @@ Fastcasso is a project intended to make image gen, image to image, and art gener
 
 ## Running with docker
 
-1. `docker build --platform amd64 -t getting-started .`
-2. `docker run --platform amd64 -dp 8000:8000 fastcasso`
+1. `docker build -t fastcasso .`
+2. `docker run -dp 8000:8000 fastcasso`
 
 ## Additional Notes
 

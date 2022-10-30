@@ -1,10 +1,7 @@
 #!/bin/sh
+ECHO "CONDA INITIALIZATION!!!"
 set -e
-
-mkdir output
-
-if [ ! -z "$DEBUG" ]; then
-  uvicorn main:app --reload
-else
-  uvicorn main:app --reload
-fi
+conda clean --all --yes
+conda env remove --name fastcasso
+conda env create -f environment.yml
+./activate.sh

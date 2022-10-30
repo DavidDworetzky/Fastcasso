@@ -19,8 +19,6 @@ RUN wget \
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 RUN conda --version
 COPY environment.yml .
-RUN conda env create -f environment.yml \
-    && conda env activate fastcasso
 
 COPY . .
 
