@@ -1,6 +1,8 @@
 FROM python:3.8-slim
 
 ENV FASTCASSO_HOME /opt/fastcasso
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
 WORKDIR $FASTCASSO_HOME
 
 RUN apt update && apt install -y \
@@ -8,7 +10,8 @@ RUN apt update && apt install -y \
     libpq-dev \
     make \
     curl \
-    wget
+    wget \
+    bzip2 
 RUN wget \
     https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && mkdir /root/.conda \
@@ -16,7 +19,8 @@ RUN wget \
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 RUN conda --version
 COPY environment.yml .
-RUN conda env create -f environment.yml && conda env activate stablediffusion
+RUN conda env create -f environment.yml \
+    && conda env activate fastcasso
 
 COPY . .
 

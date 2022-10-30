@@ -1,4 +1,4 @@
-name: stablediffusion
+name: fastcasso
 channels:
   - anaconda
   - pytorch-nightly
