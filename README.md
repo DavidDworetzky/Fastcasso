@@ -3,6 +3,9 @@ Fastcasso is a web server for diffusion and GAN based image generation.
 Fastcasso makes running stable diffusion on a web server easy and fast.
 # How to Run
 
+## Pre installation steps
+1. huggingface-cli login
+
 ## Running with uvicorn
 
 1. `uvicorn main:app --reload`

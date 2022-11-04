@@ -1,4 +1,5 @@
 #framework
+import torch
 import sys
 from fastapi import FastAPI, HTTPException
 from app.models.image_input import ImageInput
