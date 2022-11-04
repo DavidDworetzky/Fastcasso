@@ -22,12 +22,13 @@ def forward(self:BasicTransformerBlock, x, context=None):
     return x
 
 class StableDiffusion:
-    def __init__(self, model_id:str, device:str, flag_safety:bool, guidance_scale:float = 7.5):
+    def __init__(self, model_id:str, device:str, flag_safety:bool, num_inference_steps = 50, guidance_scale:float = 7.5):
         self.model_id = model_id
         self.device = device
         self.guidance_scale = guidance_scale
         self.flag_safety = flag_safety
         self.safety_checker = StableDiffusionTrivialSafetyChecker()
+        self.num_inference_steps = num_inference_steps
 
     def generate(self, image_input:ImageInput) -> Any:
         prompt = image_input.prompt
@@ -37,7 +38,7 @@ class StableDiffusion:
             pipe.safety_checker = self.safety_checker.safety_check
         pipe = pipe.to(self.device)
         with autocast("cpu"):
-            image = pipe(prompt, guidance_scale=self.guidance_scale)["sample"][0]  
+            image = pipe(prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
         
-        image.save(name)
-        return image
+            image.save(name)
+            return image

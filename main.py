@@ -1,5 +1,4 @@
 #framework
-import torch
 import sys
 from fastapi import FastAPI, HTTPException
 from app.models.image_input import ImageInput
@@ -9,7 +8,6 @@ from app.models import settings
 import io
 from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
-import cv2
 
 
 #constants
@@ -34,7 +32,8 @@ async def generate_image(prompt, name):
         StableDiffusion(
             settings.simple_diffusion_model_id, 
             settings.simple_diffusion_device, 
-            settings.safety_check
+            settings.safety_check,
+            settings.num_inference_steps
             )
         )
         image = stable_diffusion.generate(input)

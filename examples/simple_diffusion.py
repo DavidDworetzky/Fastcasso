@@ -55,6 +55,6 @@ for input in inputs:
 
     prompt = input.prompt
     with autocast("cpu"):
-        image = pipe(prompt, guidance_scale=7.5)["sample"][0]  
+        image = pipe(prompt, guidance_scale=7.5, num_inference_steps = 1).images[0]  
     
-    image.save(input.name)
+        image.save(input.name)
