@@ -10,12 +10,12 @@ from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
 
-
 #constants
 api_version = 0.1
 
 settings = settings.Settings()
 app = FastAPI()
+	
 
 @app.get('/')
 def version():
