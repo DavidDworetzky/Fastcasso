@@ -8,6 +8,7 @@ from app.models import settings
 import io
 from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
+from app.mediators.image_diffusion import generate_image_diffusion
 
 
 #constants
@@ -26,19 +27,8 @@ async def generate_image(prompt, name):
     """
     Outputs an image from a prompt.
     """
-    try:
-        input = ImageInput(prompt, name)
-        stable_diffusion = (
-        StableDiffusion(
-            settings.simple_diffusion_model_id, 
-            settings.simple_diffusion_device, 
-            settings.safety_check,
-            settings.num_inference_steps
-            )
-        )
-        image = stable_diffusion.generate(input)
-        return StreamingResponse(io.BytesIO(image.tobytes()), media_type="image/png")
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"{e}")
+    image_output = generate_image_diffusion(ImageInput(prompt=prompt, name=name), settings)
+    if isinstance(image_output, str):
+        raise HTTPException(status_code=500, detail=image_output)
+    return image_output
 
