@@ -2,6 +2,7 @@ name: fastcasso
 channels:
   - pytorch
   - fastai
+  - anaconda
   - conda-forge
   - defaults
 dependencies:
@@ -11,9 +12,9 @@ dependencies:
   - brotlipy=0.7.0=py310h1a28f6b_1002
   - bzip2=1.0.8=h620ffc9_4
   - c-ares=1.18.1=h3422bc3_0
-  - ca-certificates=2022.9.24=h4653dfc_0
+  - ca-certificates=2022.4.26=hca03da5_0
   - cairo=1.16.0=h29d4eff_2
-  - certifi=2022.9.24=pyhd8ed1ab_0
+  - certifi=2022.6.15=py310hca03da5_0
   - cffi=1.15.1=py310h22df2f2_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
   - click=8.0.4=py310hca03da5_0
@@ -33,6 +34,7 @@ dependencies:
   - gmp=6.2.1=hc377ac9_3
   - gnutls=3.6.15=h887c41c_0
   - graphite2=1.3.14=hc377ac9_1
+  - greenlet=1.1.1=py310hc377ac9_0
   - gst-plugins-base=1.14.1=hf0a386a_0
   - gstreamer=1.14.1=he09cfb7_0
   - h11=0.12.0=pyhd3eb1b0_0
@@ -85,12 +87,13 @@ dependencies:
   - numpy-base=1.23.3=py310h742c864_1
   - opencv=4.6.0=py310he2359d5_2
   - openh264=1.8.0=h98b2900_0
-  - openssl=1.1.1s=h03a7124_0
+  - openssl=1.1.1s=h1a28f6b_0
   - packaging=21.3=pyhd8ed1ab_0
   - pcre=8.45=hbdafb3b_0
   - pillow=9.2.0=py310h4d1bdd5_1
   - pip=22.2.2=py310hca03da5_0
   - pixman=0.40.0=h27ca646_0
+  - psycopg2=2.8.6=py310hf27765b_1
   - pycparser=2.21=pyhd3eb1b0_0
   - pydantic=1.10.2=py310h1a28f6b_0
   - pyopenssl=22.0.0=pyhd3eb1b0_0
@@ -108,6 +111,7 @@ dependencies:
   - setuptools=65.5.0=py310hca03da5_0
   - six=1.16.0=pyh6c4a22f_0
   - sniffio=1.3.0=pyhd8ed1ab_0
+  - sqlalchemy=1.4.32=py310h1a28f6b_0
   - sqlite=3.39.3=h1058600_0
   - starlette=0.20.4=pyhd8ed1ab_1
   - tk=8.6.12=hb8d0fd4_0

@@ -4,10 +4,11 @@ from sqlalchemy.orm import sessionmaker
 
 # We take a default connection to start. 
 # We should pull this from env / secrets when securing our server.
-SQLALCHEMY_DATABASE_URL = "postgresql://default:default@localhost/db"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost/db"
 
+#instantiate database engine and session
 Engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=Engine)
 
