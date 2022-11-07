@@ -9,12 +9,14 @@ import io
 from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
+from app.mediators.image_diffusion import get_image_stubs
 
 #constants
 api_version = 0.1
 
 settings = settings.Settings()
 app = FastAPI()
+
 	
 
 @app.get('/')
@@ -31,4 +33,14 @@ async def generate_image(prompt, name):
     if isinstance(image_output, str):
         raise HTTPException(status_code=500, detail=image_output)
     return image_output
+
+@app.get("/image/page/{page}/pageSize/{pagesize}")
+async def get_image_stubs(page: int, pagesize: int):
+    """
+    Returns a list of image stubs from the database.
+    """
+    image_stubs = get_image_stubs(page, pagesize)
+    if isinstance(image_stubs, str):
+        raise HTTPException(status_code=500, detail=image_stubs)
+    return image_stubs
 
