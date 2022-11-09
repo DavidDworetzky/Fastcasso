@@ -43,11 +43,24 @@ def get_image_stubs(page: int, pagesize: int) -> Union[List[ImageInput], str]:
     Returns a list of image stubs from the database.
     """
     try:
+        #parse page and pagesize
+        page = int(page)
+        pagesize = int(pagesize)
         db_image_outputs = Session.query(DBImageOutput).order_by(DBImageOutput.image_input_id.desc()).offset(page*pagesize).limit(pagesize).all()
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
-            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name))
+            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id))
         return image_stubs
+    except Exception as e:
+        return f"{e}"
+
+def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
+    """
+    Returns an image from the database.
+    """
+    try:
+        db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
+        return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
     except Exception as e:
         return f"{e}"

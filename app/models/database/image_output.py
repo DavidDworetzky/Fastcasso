@@ -9,5 +9,5 @@ class ImageOutput(Base):
     image_output_id = Column(Integer, primary_key=True)
     image_output_blob = Column(LargeBinary, nullable=False)
     image_input_id = Column(Integer, ForeignKey('image_input.image_input_id'), nullable=False)
-    image_input: Optional[ImageInput] = relationship("ImageInput", back_populates="image_input_output")
+    image_input: Optional[ImageInput] = relationship("ImageInput")
 

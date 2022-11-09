@@ -4,9 +4,11 @@ from dataclasses import dataclass
 class ImageGenerationStub:
     prompt:str
     name:str
+    id: int
 
 class ImageGeneration:
     prompt:str
     name:str
+    id: int
     image:bytes
 

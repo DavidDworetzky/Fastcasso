@@ -10,6 +10,7 @@ from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs
+from app.mediators.image_diffusion import get_image_generation
 
 #constants
 api_version = 0.1
@@ -25,7 +26,7 @@ def version():
 
 
 @app.get("/image/generate/{prompt}/{name}")
-async def generate_image(prompt, name):
+async def generate_image_endpoint(prompt, name):
     """
     Outputs an image from a prompt.
     """
@@ -35,7 +36,7 @@ async def generate_image(prompt, name):
     return image_output
 
 @app.get("/image/page/{page}/pageSize/{pagesize}")
-async def get_image_stubs(page: int, pagesize: int):
+async def get_image_stubs_endpoint(page, pagesize):
     """
     Returns a list of image stubs from the database.
     """
@@ -43,4 +44,14 @@ async def get_image_stubs(page: int, pagesize: int):
     if isinstance(image_stubs, str):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
+
+@app.get("/image/{image_output_id}")
+async def get_image_generation_endpoint(image_output_id):
+    """
+    Returns an image from the database.
+    """
+    image_output = get_image_generation(image_output_id)
+    if isinstance(image_output, str):
+        raise HTTPException(status_code=500, detail=image_output)
+    return image_output
 
