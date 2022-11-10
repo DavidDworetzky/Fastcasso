@@ -19,16 +19,17 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         if preset_id is not None:
             preset_id = int(preset_id)
             #get preset from settings
-            preset = next((preset for preset in settings.presets if preset.id == preset_id), None)
+            preset = next((preset for preset in settings.presets if preset.preset_id == preset_id), None)
             if preset is not None:
                 #set model_id and inference_steps
                 model_id = preset.model_id
                 inference_steps = preset.inference_steps
         #persist image input for job
-        db_image_input = DBImageInput(prompt=image_input.prompt, name=image_input.name, model_id=settings.simple_diffusion_model_id)
+        db_image_input = DBImageInput(prompt=image_input.prompt, name=image_input.name, model_id=model_id)
         Session.add(db_image_input)
         Session.commit()
         #generate image
+        print(model_id)
         stable_diffusion = (
         StableDiffusion(
             model_id, 

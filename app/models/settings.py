@@ -10,5 +10,7 @@ class Settings(BaseSettings):
     num_inference_steps:int = 50
     presets: List[PipelinePreset] = (
     [PipelinePreset(model_id="CompVis/stable-diffusion-v1-4", inference_steps=50, preset_id=1),
-    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=50, preset_id=2),]
+    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=50, preset_id=2),
+    #quick preset used for testing
+    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=1, preset_id=3)]
     )
