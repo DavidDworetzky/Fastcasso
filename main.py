@@ -24,9 +24,9 @@ app = FastAPI()
 def version():
     return {"Version" : f"{api_version}"}
 
-
+#preset_id is optional
 @app.get("/image/generate/{prompt}/{name}")
-async def generate_image_endpoint(prompt, name):
+async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None):
     """
     Outputs an image from a prompt.
     """
@@ -54,4 +54,11 @@ async def get_image_generation_endpoint(image_output_id):
     if isinstance(image_output, str):
         raise HTTPException(status_code=500, detail=image_output)
     return image_output
+
+@app.get("/presets")
+async def get_presets():
+    """
+    Returns a list of presets.
+    """
+    return settings.presets
 

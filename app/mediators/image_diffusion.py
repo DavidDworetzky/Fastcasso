@@ -1,6 +1,6 @@
 from app.models.image_input import ImageInput
 from starlette.responses import StreamingResponse
-from typing import Union, List
+from typing import Union, List, Optional
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.models import settings
 from app.models.database.database import Session
@@ -9,11 +9,21 @@ from app.models.database.image_output import ImageOutput as DBImageOutput
 import io
 from app.models.image_generation import ImageGenerationStub
 
-def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings) -> Union[StreamingResponse, str]:
+def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
     Outputs an image from a prompt and persists to our database. 
     """
     try:
+        model_id = settings.simple_diffusion_model_id
+        inference_steps = settings.num_inference_steps
+        if preset_id is not None:
+            preset_id = int(preset_id)
+            #get preset from settings
+            preset = next((preset for preset in settings.presets if preset.id == preset_id), None)
+            if preset is not None:
+                #set model_id and inference_steps
+                model_id = preset.model_id
+                inference_steps = preset.inference_steps
         #persist image input for job
         db_image_input = DBImageInput(prompt=image_input.prompt, name=image_input.name, model_id=settings.simple_diffusion_model_id)
         Session.add(db_image_input)
@@ -21,10 +31,10 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         #generate image
         stable_diffusion = (
         StableDiffusion(
-            settings.simple_diffusion_model_id, 
+            model_id, 
             settings.simple_diffusion_device, 
             settings.safety_check,
-            settings.num_inference_steps
+            inference_steps
             )
         )
         image = stable_diffusion.generate(image_input)
