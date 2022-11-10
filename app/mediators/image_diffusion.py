@@ -29,7 +29,6 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         Session.add(db_image_input)
         Session.commit()
         #generate image
-        print(model_id)
         stable_diffusion = (
         StableDiffusion(
             model_id, 
