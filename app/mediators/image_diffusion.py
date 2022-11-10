@@ -29,7 +29,10 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         )
         image = stable_diffusion.generate(image_input)
         #persist image output for job
-        output_blob = image.tobytes()
+        bytes_io_arr = io.BytesIO()
+        image.save(bytes_io_arr, format="PNG")
+        output_blob = bytes_io_arr.getvalue()
+        #set db image output
         db_image_output = DBImageOutput(image_input_id=db_image_input.image_input_id, image_output_blob=output_blob) 
         Session.add(db_image_output)
         Session.commit()
@@ -61,6 +64,7 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     """
     try:
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
+        print(len(db_image_output.image_output_blob))
         return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
     except Exception as e:
         return f"{e}"
