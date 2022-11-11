@@ -41,6 +41,4 @@ class StableDiffusion:
             pipe.enable_attention_slicing()
         with autocast("cpu"):
             image = pipe(prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
-        
-            image.save(name)
             return image
