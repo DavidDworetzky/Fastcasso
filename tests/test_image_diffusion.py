@@ -1,12 +1,11 @@
 from fastapi import FastAPI
-from fastapi.testclient import TestClient
 
 from fastapi.testclient import TestClient
-from PIL import Image
 #import mocks for testing
 from unittest import mock
 
 from ..main import app
+from PIL import Image
 
 client = TestClient(app)
 
@@ -21,10 +20,14 @@ def test_read_version():
     assert response.json().keys() == {"Version"}
 
 @mock.patch("app.mediators.image_diffusion.generate_image_diffusion")
+@mock.patch("main.generate_image_diffusion")
 def test_generate_image_endpoint(
     mock_generate_image_diffusion,
+    mock_generate_image_diffusion_mediator,
 ):
-    mock_generate_image_diffusion.return_value = mock_generate_image_diffusion()
+    mock_png = mock_generate_image_diffusion()
+    mock_generate_image_diffusion.return_value = mock_png
+    mock_generate_image_diffusion_mediator.return_value = mock_png
     response = client.get("/image/generate/this%20is%20a%20test/test.png")
     assert response.status_code == 200
 
