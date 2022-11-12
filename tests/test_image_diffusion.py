@@ -28,6 +28,9 @@ def test_generate_image_endpoint(
     mock_png = mock_generate_image_diffusion()
     mock_generate_image_diffusion.return_value = mock_png
     mock_generate_image_diffusion_mediator.return_value = mock_png
-    response = client.get("/image/generate/this%20is%20a%20test/test.png")
+    #use low cycle preset id
+    response = client.get("/image/generate/this%20is%20a%20test/test.png?preset_id=3")
     assert response.status_code == 200
+    #assert database contains new test.png image
+
 
