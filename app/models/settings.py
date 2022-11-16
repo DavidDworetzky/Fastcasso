@@ -12,5 +12,9 @@ class Settings(BaseSettings):
     [PipelinePreset(model_id="CompVis/stable-diffusion-v1-4", inference_steps=50, preset_id=1),
     PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=50, preset_id=2),
     #quick preset used for testing
-    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=1, preset_id=3)]
+    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=1, preset_id=3),
+    #high quality animation preset
+    PipelinePreset(model_id="nitrosocke/mo-di-diffusion", inference_steps=50, preset_id=4),
+    #high quality midjourney style preset
+    PipelinePreset(model_id="prompthero/midjourney-v4-diffusion", inference_steps=50, preset_id=5, keywords="mdjrny-v4 style")]
     )

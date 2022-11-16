@@ -14,6 +14,7 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
     Outputs an image from a prompt and persists to our database. 
     """
     try:
+        keywords = None
         model_id = settings.simple_diffusion_model_id
         inference_steps = settings.num_inference_steps
         if preset_id is not None:
@@ -24,8 +25,10 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
                 #set model_id and inference_steps
                 model_id = preset.model_id
                 inference_steps = preset.inference_steps
+                keywords = preset.keywords
+        modified_prompt = f'{keywords} {image_input.prompt}' if keywords is not None else image_input.prompt
         #persist image input for job
-        db_image_input = DBImageInput(prompt=image_input.prompt, name=image_input.name, model_id=model_id)
+        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id)
         Session.add(db_image_input)
         Session.commit()
         #generate image
@@ -63,7 +66,7 @@ def get_image_stubs(page: int, pagesize: int) -> Union[List[ImageInput], str]:
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
-            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id))
+            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id))
         return image_stubs
     except Exception as e:
         return f"{e}"
