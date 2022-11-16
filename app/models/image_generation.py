@@ -5,6 +5,7 @@ class ImageGenerationStub:
     prompt:str
     name:str
     id: int
+    model_id: str
 
 class ImageGeneration:
     prompt:str
