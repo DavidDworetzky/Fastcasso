@@ -11,9 +11,6 @@ import time
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.models.image_input import ImageInput
 from app.models import settings
-from multiprocessing import Queue
-
-application_settings = settings.Settings()
 
 
 class DeviceStatus(object):
@@ -47,50 +44,33 @@ class Device(Base):
 
     return Device(architecture, device_address, device_name)
 
-def register_device_and_start_subprocess(self):
-    """
-    Entrypoint to register our device and start a subprocess to listen for jobs.
-    """
-    device = Device.from_device()
-
-    #check if device is already registered
-    devices = Device.query.filter_by(device_address=device.device_address).all()
-    if len(devices) > 0:
-        device = devices[0]
-        if device.device_status == DeviceStatus.IDLE:
-            #set device to busy and begin subprocess listening for jobs.
-            device.device_status = DeviceStatus.BUSY
-            Session.commit()
-            return
-
-
-    #check if device is already registered
-    #if device.device_address in devices:
-def process_jobs(self):
+  def process_jobs(self, settings: settings.Settings):
     """
     Process jobs from the queue
     """
+    self.device_status = DeviceStatus.BUSY
+    Session.commit()
     while True:
         #get job from queue
         job = Job.query.filter_by(status=JobStatus.PENDING).first()
         if job is None:
-            #if there are no jobs, sleep for 5 seconds
-            time.sleep(5)
+            #if there are no jobs, sleep for 250 milliseconds
+            time.sleep(.25)
             continue
         #set job status to running
         job.status = JobStatus.RUNNING
+        job.device_id = self.id
         Session.commit()
         #run job
         try:
             #execute diffusion job for job definition in database
             #create image input
             image_input = ImageInput(job.prompt, job.name)
-            response = generate_image_diffusion(image_input, application_settings, job.preset_id)
-            queue = Queue()
-            queue.put((job.name, response))
-            #set job status to completed
+            generate_image_diffusion(image_input, settings, job.preset_id)
             job.status = JobStatus.COMPLETED
             Session.commit()
         except Exception as e:
+            print(e)
             job.status = JobStatus.FAILED
             Session.commit()
+

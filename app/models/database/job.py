@@ -15,7 +15,8 @@ class JobStatus(object):
     prompt = Column(String(255))
     name = Column(String(255))
     preset_id = Column(Integer)
-    device_id = Column(Integer, ForeignKey('Device.id'))
+    #implicit but nullable relationship
+    device_id = Column(Integer, nullable=True)
     status = Column(Integer)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)

@@ -11,6 +11,8 @@ from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs
 from app.mediators.image_diffusion import get_image_generation
+from app.mediators.device import register_and_start_device
+from app.mediators.job import queue_generate_image_diffusion_job
 
 #constants
 api_version = 0.1
@@ -18,7 +20,12 @@ api_version = 0.1
 settings = settings.Settings()
 app = FastAPI()
 
-	
+
+@app.on_event("startup")
+async def startup_event():
+    #register device for inference jobs
+    register_and_start_device(settings)
+
 
 @app.get('/')
 def version():
