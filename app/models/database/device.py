@@ -9,6 +9,11 @@ from app.models.database.database import Session
 from app.models.database.job import JobStatus
 import time
 from app.mediators.image_diffusion import generate_image_diffusion
+from app.models.image_input import ImageInput
+from app.models import settings
+from multiprocessing import Queue
+
+application_settings = settings.Settings()
 
 
 class DeviceStatus(object):
@@ -79,8 +84,13 @@ def process_jobs(self):
         try:
             #execute diffusion job for job definition in database
             #create image input
-            
-            generate_image_diffusion()
+            image_input = ImageInput(job.prompt, job.name)
+            response = generate_image_diffusion(image_input, application_settings, job.preset_id)
+            queue = Queue()
+            queue.put((job.name, response))
+            #set job status to completed
+            job.status = JobStatus.COMPLETED
+            Session.commit()
         except Exception as e:
             job.status = JobStatus.FAILED
             Session.commit()
