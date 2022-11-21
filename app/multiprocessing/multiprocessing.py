@@ -14,7 +14,7 @@ def register_and_start_device(settings: Settings):
     device = Device.from_device()
 
     #check if device is already registered
-    devices = Device.query.filter_by(device_address=device.device_address).all()
+    devices = Session.query(Device).filter_by(device_address=device.device_address).all()
     if len(devices) > 0:
         device = devices[0]
         if device.device_status == DeviceStatus.IDLE:
