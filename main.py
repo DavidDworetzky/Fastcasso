@@ -1,17 +1,11 @@
 #framework
-import sys
 from fastapi import FastAPI, HTTPException
 from app.models.image_input import ImageInput
-import uvicorn
 from typing import Optional
 from app.models import settings
-import io
-from starlette.responses import StreamingResponse
-from app.pipelines.stable_diffusion import StableDiffusion
-from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs
 from app.mediators.image_diffusion import get_image_generation
-from app.mediators.device import register_and_start_device
+from app.multiprocessing.multiprocessing import register_and_start_device
 from app.mediators.job import queue_generate_image_diffusion_job
 import uuid
 import time

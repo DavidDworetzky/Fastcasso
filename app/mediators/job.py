@@ -6,6 +6,9 @@ from app.models.database.job import Job
 from app.models.database.job import JobStatus
 import datetime
 from app.models.database.image_input import ImageInput as DBImageInput
+from app.models.database.device import Device
+from app.mediators.image_diffusion import generate_image_diffusion
+import time
 
 
 def queue_generate_image_diffusion_job(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None, correlation_id = Optional[Any]) -> None:

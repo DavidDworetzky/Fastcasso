@@ -1,17 +1,16 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from app.models.database.database import Base
-from app.models.database.job import Job
+from app.models.database.job import JobStatus, Job
 from datetime import datetime
 from uuid import getnode as get_mac
 import platform
 import socket
 from app.models.database.database import Session
-from app.models.database.job import JobStatus
+from app.models import settings
+import multiprocessing
 import time
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.models.image_input import ImageInput
-from app.models import settings
-import multiprocessing
 
 
 class DeviceStatus(object):
@@ -44,47 +43,6 @@ class Device(Base):
     device_name = socket.gethostname()
 
     return Device(architecture, device_address, device_name)
-
-  def process_jobs(self, settings: settings.Settings):
-    """
-    Spawns watcher to process jobs from the queue
-    """
-    self.device_status = DeviceStatus.BUSY
-    Session.commit()
-
-    #set multiprocessing start method to spawn and start process
-    print("Starting Process")
-    multiprocessing.set_start_method('spawn')
-    p = multiprocessing.Process(target=process_jobs_subproc, args=(self,settings))
-    p.start()
-    p.join()
-
-def process_jobs_subproc(device: Device, settings: settings.Settings):
-    print(device)
-    print(settings)
-    while True:
-        #get job from queue
-        job = Job.query.filter_by(status=JobStatus.PENDING).first()
-        if job is None:
-            #if there are no jobs, sleep for 250 milliseconds
-            time.sleep(.25)
-            continue
-        #set job status to running
-        job.status = JobStatus.RUNNING
-        job.device_id = device.id
-        Session.commit()
-        #run job
-        try:
-            #execute diffusion job for job definition in database
-            #create image input
-            image_input = ImageInput(job.prompt, job.name)
-            generate_image_diffusion(image_input, settings, job.preset_id)
-            job.status = JobStatus.COMPLETED
-            Session.commit()
-        except Exception as e:
-            print(e)
-            job.status = JobStatus.FAILED
-            Session.commit()
 
 
 
