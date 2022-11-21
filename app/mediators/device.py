@@ -1,8 +1,9 @@
 from app.models.database.database import Session
 from app.models.database.device import Device
 from app.models.database.device import DeviceStatus
+from app.models.settings import Settings
 
-def register_and_start_device():
+def register_and_start_device(settings: Settings):
     """
     Entrypoint to register our device and start a subprocess to listen for jobs.
     """
@@ -16,10 +17,10 @@ def register_and_start_device():
             #set device to busy and begin subprocess listening for jobs.
             device.device_status = DeviceStatus.BUSY
             Session.commit()
-            return
+            device.process_jobs(settings)
 
     #if device is not registered, register it and begin subprocess listening for jobs.
     Session.add(device)
     device.device_status = DeviceStatus.BUSY
     Session.commit()
-    device.process_jobs()
+    device.process_jobs(settings)
