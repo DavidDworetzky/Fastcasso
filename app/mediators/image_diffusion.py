@@ -1,6 +1,6 @@
 from app.models.image_input import ImageInput
 from starlette.responses import StreamingResponse
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Any
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.models import settings
 from app.models.database.database import Session
@@ -8,8 +8,9 @@ from app.models.database.image_input import ImageInput as DBImageInput
 from app.models.database.image_output import ImageOutput as DBImageOutput
 import io
 from app.models.image_generation import ImageGenerationStub
+import uuid
 
-def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
+def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None, correlation_id: Optional[Any] = None) -> Union[StreamingResponse, str]:
     """
     Outputs an image from a prompt and persists to our database. 
     """
@@ -27,10 +28,14 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
                 inference_steps = preset.inference_steps
                 keywords = preset.keywords
         modified_prompt = f'{keywords} {image_input.prompt}' if keywords is not None else image_input.prompt
-        #persist image input for job
-        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id)
-        Session.add(db_image_input)
-        Session.commit()
+
+        #query db_image_input based off of correlation_id
+        db_image_input = Session.query(DBImageInput).filter(DBImageInput.correlation_id == correlation_id).first()
+        if db_image_input is None:
+            #persist image input for job
+            db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id, correlation_id=correlation_id)
+            Session.add(db_image_input)
+            Session.commit()
         #generate image
         stable_diffusion = (
         StableDiffusion(
@@ -77,7 +82,16 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     """
     try:
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
-        print(len(db_image_output.image_output_blob))
+        return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
+    except Exception as e:
+        return f"{e}"
+
+def get_image_generation_by_correlation(correlation_id: Any) -> Union[StreamingResponse, str]:
+    """
+    Returns an image from the database.
+    """
+    try:
+        db_image_output = Session.query(DBImageOutput).join(DBImageInput).filter(DBImageInput.correlation_id == correlation_id).first()
         return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
     except Exception as e:
         return f"{e}"

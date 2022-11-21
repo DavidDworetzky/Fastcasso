@@ -11,6 +11,7 @@ import time
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.models.image_input import ImageInput
 from app.models import settings
+import multiprocessing
 
 
 class DeviceStatus(object):
@@ -46,10 +47,21 @@ class Device(Base):
 
   def process_jobs(self, settings: settings.Settings):
     """
-    Process jobs from the queue
+    Spawns watcher to process jobs from the queue
     """
     self.device_status = DeviceStatus.BUSY
     Session.commit()
+
+    #set multiprocessing start method to spawn and start process
+    print("Starting Process")
+    multiprocessing.set_start_method('spawn')
+    p = multiprocessing.Process(target=process_jobs_subproc, args=(self,settings))
+    p.start()
+    p.join()
+
+def process_jobs_subproc(device: Device, settings: settings.Settings):
+    print(device)
+    print(settings)
     while True:
         #get job from queue
         job = Job.query.filter_by(status=JobStatus.PENDING).first()
@@ -59,7 +71,7 @@ class Device(Base):
             continue
         #set job status to running
         job.status = JobStatus.RUNNING
-        job.device_id = self.id
+        job.device_id = device.id
         Session.commit()
         #run job
         try:
@@ -73,4 +85,6 @@ class Device(Base):
             print(e)
             job.status = JobStatus.FAILED
             Session.commit()
+
+
 
