@@ -51,7 +51,7 @@ def process_jobs_subprocess(device: Device, settings: Settings):
     print(settings)
     while True:
         #get job from queue
-        job = Job.query.filter_by(status=JobStatus.PENDING).first()
+        job = Session.query(Job).filter_by(status=JobStatus.PENDING).first()
         if job is None:
             #if there are no jobs, sleep for 250 milliseconds
             time.sleep(.25)
