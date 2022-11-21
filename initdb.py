@@ -20,6 +20,7 @@ conn = connect(
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 cur = conn.cursor()
 try:
+    cur.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(DB_NAME)))
     cur.execute(sql.SQL("CREATE DATABASE {}".format(DB_NAME)))
 except Exception as e:
     print(e)

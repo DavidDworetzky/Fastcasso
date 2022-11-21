@@ -9,7 +9,7 @@ class JobStatus(object):
   FAILED = 3
   CANCELLED = 4
 
-  class Job(Base):
+class Job(Base):
     __tablename__ = 'Job'
     id = Column(Integer, primary_key=True)
     prompt = Column(String(255))

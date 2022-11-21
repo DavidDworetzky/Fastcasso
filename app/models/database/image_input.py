@@ -8,4 +8,4 @@ class ImageInput(Base):
     prompt = Column(String, nullable=False)
     name = Column(String, nullable=False)
     model_id = Column(String, nullable=False)
-    correlation_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    correlation_id = Column(UUID(as_uuid=True), default=uuid.uuid4)
