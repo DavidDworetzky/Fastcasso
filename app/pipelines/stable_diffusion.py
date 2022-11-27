@@ -39,6 +39,9 @@ class StableDiffusion:
         pipe = pipe.to(self.device)
         if self.device == "mps":
             pipe.enable_attention_slicing()
-        with autocast("cpu"):
+        if self.device == "mps":
+            image = pipe(prompt, num_inference_steps=self.num_inference_steps, guidance_scale=self.guidance_scale, device=self.device).images[0]
+            return image
+        with autocast(self.device):
             image = pipe(prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
             return image
