@@ -3,7 +3,12 @@ from psycopg2 import connect, extensions, sql
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2.errors import DuplicateDatabase
 from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
+
+pwd = os.getenv("POSTGRES_PWD")
 
 DB_NAME = "db"
 DB_USER = "postgres"
@@ -16,6 +21,7 @@ conn = connect(
         user=DB_USER,
         host=DB_HOST,
         port=5432,
+        password=pwd,
     )
 conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 cur = conn.cursor()

@@ -1,11 +1,17 @@
 from pydantic import BaseSettings
 from typing import List, Optional
 from app.models.pipeline_preset import PipelinePreset
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+device = os.getenv("DEVICE_TYPE")
 
 class Settings(BaseSettings):
     app_name: str = "Fastcasso"
     simple_diffusion_model_id: str = "CompVis/stable-diffusion-v1-4"
-    simple_diffusion_device:str = "mps"
+    simple_diffusion_device:str = device
     safety_check:bool = False
     num_inference_steps:int = 50
     presets: List[PipelinePreset] = (

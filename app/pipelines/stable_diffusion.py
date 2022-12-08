@@ -13,13 +13,21 @@ from app.models.image_input import ImageInput
 from diffusers.models.attention import BasicTransformerBlock
 from fastcore.basics import patch
 
-#Patching for Mac M1 
-@patch
-def forward(self:BasicTransformerBlock, x, context=None):
-    x = self.attn1(self.norm1(x.contiguous())) + x # <--- added x.contiguous()
-    x = self.attn2(self.norm2(x), context=context) + x
-    x = self.ff(self.norm3(x)) + x
-    return x
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+device = os.getenv("DEVICE_TYPE")
+
+if device == "mps":
+    #Patching for Mac M1 
+    @patch
+    def forward(self:BasicTransformerBlock, x, context=None):
+        x = self.attn1(self.norm1(x.contiguous())) + x # <--- added x.contiguous()
+        x = self.attn2(self.norm2(x), context=context) + x
+        x = self.ff(self.norm3(x)) + x
+        return x
 
 class StableDiffusion:
     def __init__(self, model_id:str, device:str, flag_safety:bool, num_inference_steps = 50, guidance_scale:float = 7.5):
@@ -39,6 +47,5 @@ class StableDiffusion:
         pipe = pipe.to(self.device)
         if self.device == "mps":
             pipe.enable_attention_slicing()
-        with autocast("cpu"):
-            image = pipe(prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
-            return image
+        image = pipe(prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
+        return image
