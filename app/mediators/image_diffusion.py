@@ -28,7 +28,7 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
                 keywords = preset.keywords
         modified_prompt = f'{keywords} {image_input.prompt}' if keywords is not None else image_input.prompt
         #persist image input for job
-        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id)
+        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id, negative_prompt=image_input.negative_prompt)
         Session.add(db_image_input)
         Session.commit()
         #generate image
