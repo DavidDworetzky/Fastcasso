@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-device = os.getenv("DEVICE")
+device = os.getenv("DEVICE_TYPE")
 
 class Settings(BaseSettings):
     app_name: str = "Fastcasso"
