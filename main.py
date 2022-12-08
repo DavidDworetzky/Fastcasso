@@ -26,11 +26,11 @@ def version():
 
 #preset_id is optional
 @app.get("/image/generate/{prompt}/{name}")
-async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None):
+async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None, negative_prompt: Optional[str] = None):
     """
     Outputs an image from a prompt.
     """
-    image_output = generate_image_diffusion(ImageInput(prompt=prompt, name=name), settings, preset_id = preset_id)
+    image_output = generate_image_diffusion(ImageInput(prompt=prompt, name=name, negative_prompt=negative_prompt), settings, preset_id = preset_id)
     if isinstance(image_output, str):
         raise HTTPException(status_code=500, detail=image_output)
     return image_output
