@@ -45,17 +45,16 @@ class StableDiffusion:
             scheduler = EulerDiscreteScheduler.from_pretrained(self.model_id, subfolder="scheduler")
 
         prompt = image_input.prompt
-        name = image_input.name
         #pipeline initialization
         if scheduler is not None:
             pipe = StableDiffusionPipeline.from_pretrained(self.model_id, scheduler=scheduler, use_auth_token=True)
         else: 
             pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
         if not self.flag_safety:
-            pipe.safety_checker = self.safety_checker.safety_check
+            pipe.safety_checker = None
         pipe = pipe.to(self.device)
         #we enable attention slicing for mps to speed up performance on Mac M1 devices
         if self.device == "mps":
             pipe.enable_attention_slicing()
-        image = pipe(prompt, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
+        image = pipe(prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
         return image

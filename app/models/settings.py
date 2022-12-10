@@ -15,12 +15,13 @@ class Settings(BaseSettings):
     safety_check:bool = False
     num_inference_steps:int = 50
     presets: List[PipelinePreset] = (
-    [PipelinePreset(model_id="CompVis/stable-diffusion-v1-4", inference_steps=50, preset_id=1),
-    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=50, preset_id=2),
+    [PipelinePreset(model_id="CompVis/stable-diffusion-v1-4", inference_steps=50, preset_id=1, default_width=512, default_height=512),
+    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=50, preset_id=2, default_width=512, default_height=512),
     #quick preset used for testing
-    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=1, preset_id=3),
+    PipelinePreset(model_id="runwayml/stable-diffusion-v1-5", inference_steps=1, preset_id=3, default_width=512, default_height=512),
     #high quality animation preset
-    PipelinePreset(model_id="nitrosocke/mo-di-diffusion", inference_steps=50, preset_id=4),
+    PipelinePreset(model_id="nitrosocke/mo-di-diffusion", inference_steps=50, preset_id=4, default_width=512, default_height = 512),
     #high quality midjourney style preset
-    PipelinePreset(model_id="prompthero/midjourney-v4-diffusion", inference_steps=50, preset_id=5, keywords="mdjrny-v4 style")]
+    PipelinePreset(model_id="prompthero/midjourney-v4-diffusion", inference_steps=50, preset_id=5, keywords="mdjrny-v4 style", default_width=512, default_height=512),
+    PipelinePreset(model_id="stabilityai/stable-diffusion-2", inference_steps=50,preset_id=6, default_width = 768, default_height= 768, negative_keywords="ugly, boring, bad anatomy, deformed face, deformed hands, deformed limbs")]
     )
