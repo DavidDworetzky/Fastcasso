@@ -32,8 +32,13 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
                     image_input.height = preset.default_height
                 if image_input.width is None:
                     image_input.width = preset.default_width
-        modified_prompt = f'{keywords} {image_input.prompt}' if keywords is not None else image_input.prompt
-        modified_negative_prompt = f'{negative_keywords} {image_input.negative_prompt}' if negative_keywords is not None else image_input.negative_prompt
+        #modify prompt and negative prompt from preset
+        image_input_prompt_text = "" if image_input.prompt is None else image_input.prompt
+        image_input_negative_prompt_text = "" if image_input.negative_prompt is None else image_input.negative_prompt
+        modified_prompt = f'{keywords} {image_input_prompt_text}' if keywords is not None else image_input.prompt
+        modified_negative_prompt = f'{negative_keywords} {image_input_negative_prompt_text}' if negative_keywords is not None else image_input.negative_prompt
+        image_input.prompt = modified_prompt
+        image_input.negative_prompt = modified_negative_prompt
         #persist image input for job
         db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id, negative_prompt = modified_negative_prompt)
         Session.add(db_image_input)

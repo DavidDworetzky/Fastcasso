@@ -26,7 +26,7 @@ def version():
 
 #preset_id is optional
 @app.get("/image/generate/{prompt}/{name}")
-async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None, negative_prompt: Optional[str] = None, height: Optional[str] = None, width: Optional[str] = None):
+async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None, negative_prompt: Optional[str] = None, height: Optional[int] = None, width: Optional[int] = None):
     """
     Outputs an image from a prompt.
     """

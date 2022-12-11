@@ -1,6 +1,6 @@
 import torch
 from torch import autocast
-from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler
+from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, DPMSolverMultistepScheduler
 from typing import Any
 
 import numpy as np
@@ -41,7 +41,8 @@ class StableDiffusion:
     def generate(self, image_input:ImageInput) -> Any:
         #set custom scheduler info depending on if our pipeline needs it
         scheduler = None
-        if self.model_id == "stabilityai/stable-diffusion-2":
+
+        if self.model_id == "stabilityai/stable-diffusion-2" or self.model_id == "stabilityai/stable-diffusion-2-1-base":
             scheduler = EulerDiscreteScheduler.from_pretrained(self.model_id, subfolder="scheduler")
 
         prompt = image_input.prompt
@@ -53,6 +54,10 @@ class StableDiffusion:
         if not self.flag_safety:
             pipe.safety_checker = None
         pipe = pipe.to(self.device)
+        
+        #if we are using the 2-1 model, we need to use the DPMSolverMultiStepScheduler
+        if self.model_id == "stabilityai/stable-diffusion-2-1-base":
+            scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         #we enable attention slicing for mps to speed up performance on Mac M1 devices
         if self.device == "mps":
             pipe.enable_attention_slicing()

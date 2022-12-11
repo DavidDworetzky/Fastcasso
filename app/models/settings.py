@@ -23,5 +23,8 @@ class Settings(BaseSettings):
     PipelinePreset(model_id="nitrosocke/mo-di-diffusion", inference_steps=50, preset_id=4, default_width=512, default_height = 512),
     #high quality midjourney style preset
     PipelinePreset(model_id="prompthero/midjourney-v4-diffusion", inference_steps=50, preset_id=5, keywords="mdjrny-v4 style", default_width=512, default_height=512),
-    PipelinePreset(model_id="stabilityai/stable-diffusion-2", inference_steps=50,preset_id=6, default_width = 768, default_height= 768, negative_keywords="ugly, boring, bad anatomy, deformed face, deformed hands, deformed limbs")]
+    PipelinePreset(model_id="prompthero/midjourney-v4-diffusion", inference_steps=50, preset_id=6, keywords="", default_width=512, default_height=512),
+    #stable diffusion 2 presets,
+    PipelinePreset(model_id="stabilityai/stable-diffusion-2", inference_steps=50,preset_id=7, default_width = 768, default_height= 768, negative_keywords="ugly, boring, bad anatomy, deformed face, deformed hands, deformed limbs"),
+    PipelinePreset(model_id="stabilityai/stable-diffusion-2-1-base", inference_steps=50, preset_id=8, default_width = 768, default_height = 768, negative_keywords="ugly, boring, bad anatomy, deformed face, deformed hands, deformed limbs")]
     )
