@@ -83,6 +83,20 @@ def get_image_stubs(page: int, pagesize: int) -> Union[List[ImageInput], str]:
     except Exception as e:
         return f"{e}"
 
+def search_image_stubs(term:str) -> Union[List[ImageInput], str]:
+    """
+    Returns a list of image stubs from the database.
+    """
+    try:
+        db_image_outputs = Session.query(DBImageOutput).join(DBImageInput).filter(DBImageInput.prompt.like(f'%{term}%')).all()
+        image_stubs = []
+        for db_image_output in db_image_outputs:
+            input = db_image_output.image_input
+            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id))
+        return image_stubs
+    except Exception as e:
+        return f"{e}"
+
 def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     """
     Returns an image from the database.

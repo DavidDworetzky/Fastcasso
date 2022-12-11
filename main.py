@@ -9,7 +9,7 @@ import io
 from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
-from app.mediators.image_diffusion import get_image_stubs
+from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
 from app.mediators.image_diffusion import get_image_generation
 
 #constants
@@ -41,6 +41,16 @@ async def get_image_stubs_endpoint(page, pagesize):
     Returns a list of image stubs from the database.
     """
     image_stubs = get_image_stubs(page, pagesize)
+    if isinstance(image_stubs, str):
+        raise HTTPException(status_code=500, detail=image_stubs)
+    return image_stubs
+
+@app.get("/image/search/{term}")
+async def search_image_stubs_endpoint(term):
+    """
+    Returns a list of image stubs from the database.
+    """
+    image_stubs = search_image_stubs(term=term)
     if isinstance(image_stubs, str):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
