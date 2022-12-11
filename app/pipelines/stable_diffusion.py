@@ -42,7 +42,7 @@ class StableDiffusion:
         #set custom scheduler info depending on if our pipeline needs it
         scheduler = None
 
-        if self.model_id == "stabilityai/stable-diffusion-2" or self.model_id == "stabilityai/stable-diffusion-2-1-base":
+        if self.model_id == "stabilityai/stable-diffusion-2":
             scheduler = EulerDiscreteScheduler.from_pretrained(self.model_id, subfolder="scheduler")
 
         prompt = image_input.prompt
@@ -54,7 +54,7 @@ class StableDiffusion:
         if not self.flag_safety:
             pipe.safety_checker = None
         pipe = pipe.to(self.device)
-        
+
         #if we are using the 2-1 model, we need to use the DPMSolverMultiStepScheduler
         if self.model_id == "stabilityai/stable-diffusion-2-1-base":
             scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
