@@ -15,6 +15,7 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
     """
     try:
         keywords = None
+        negative_keywords = None
         model_id = settings.simple_diffusion_model_id
         inference_steps = settings.num_inference_steps
         if preset_id is not None:
@@ -26,9 +27,20 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
                 model_id = preset.model_id
                 inference_steps = preset.inference_steps
                 keywords = preset.keywords
-        modified_prompt = f'{keywords} {image_input.prompt}' if keywords is not None else image_input.prompt
+                negative_keywords = preset.negative_keywords
+                if image_input.height is None:
+                    image_input.height = preset.default_height
+                if image_input.width is None:
+                    image_input.width = preset.default_width
+        #modify prompt and negative prompt from preset
+        image_input_prompt_text = "" if image_input.prompt is None else image_input.prompt
+        image_input_negative_prompt_text = "" if image_input.negative_prompt is None else image_input.negative_prompt
+        modified_prompt = f'{keywords} {image_input_prompt_text}' if keywords is not None else image_input.prompt
+        modified_negative_prompt = f'{negative_keywords} {image_input_negative_prompt_text}' if negative_keywords is not None else image_input.negative_prompt
+        image_input.prompt = modified_prompt
+        image_input.negative_prompt = modified_negative_prompt
         #persist image input for job
-        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id, negative_prompt=image_input.negative_prompt)
+        db_image_input = DBImageInput(prompt=modified_prompt, name=image_input.name, model_id=model_id, negative_prompt = modified_negative_prompt)
         Session.add(db_image_input)
         Session.commit()
         #generate image

@@ -1,6 +1,6 @@
 import torch
 from torch import autocast
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionPipeline, EulerDiscreteScheduler, DPMSolverMultistepScheduler
 from typing import Any
 
 import numpy as np
@@ -39,13 +39,27 @@ class StableDiffusion:
         self.num_inference_steps = num_inference_steps
 
     def generate(self, image_input:ImageInput) -> Any:
+        #set custom scheduler info depending on if our pipeline needs it
+        scheduler = None
+
+        if self.model_id == "stabilityai/stable-diffusion-2":
+            scheduler = EulerDiscreteScheduler.from_pretrained(self.model_id, subfolder="scheduler")
+
         prompt = image_input.prompt
-        name = image_input.name
-        pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
+        #pipeline initialization
+        if scheduler is not None:
+            pipe = StableDiffusionPipeline.from_pretrained(self.model_id, scheduler=scheduler, use_auth_token=True)
+        else: 
+            pipe = StableDiffusionPipeline.from_pretrained(self.model_id, use_auth_token=True)
         if not self.flag_safety:
-            pipe.safety_checker = self.safety_checker.safety_check
+            pipe.safety_checker = None
         pipe = pipe.to(self.device)
+
+        #if we are using the 2-1 model, we need to use the DPMSolverMultiStepScheduler
+        if self.model_id == "stabilityai/stable-diffusion-2-1-base":
+            scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+        #we enable attention slicing for mps to speed up performance on Mac M1 devices
         if self.device == "mps":
             pipe.enable_attention_slicing()
-        image = pipe(prompt, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]  
+        image = pipe(prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
         return image
