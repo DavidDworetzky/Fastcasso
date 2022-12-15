@@ -11,6 +11,7 @@ from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
 from app.mediators.image_diffusion import get_image_generation
+from app.models.request.image_search import image_search
 
 #constants
 api_version = 0.1
@@ -41,6 +42,17 @@ async def get_image_stubs_endpoint(page, pagesize):
     Returns a list of image stubs from the database.
     """
     image_stubs = get_image_stubs(page, pagesize)
+    if isinstance(image_stubs, str):
+        raise HTTPException(status_code=500, detail=image_stubs)
+    return image_stubs
+
+#search endpoint with pagination parameters
+@app.post("/image/search")
+async def search_image_stubs_endpoint(search: image_search):
+    """
+    Returns a list of image stubs from the database.
+    """
+    image_stubs = search_image_stubs(term=search.term, model_id=search.model_id, page=search.page, page_size=search.page_size, negative_prompt=search.negative_prompt)
     if isinstance(image_stubs, str):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
