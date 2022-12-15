@@ -66,15 +66,15 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
     except Exception as e:
         return f"{e}"
 
-def get_image_stubs(page: int, pagesize: int) -> Union[List[ImageInput], str]:
+def get_image_stubs(page: int, pageSize: int) -> Union[List[ImageInput], str]:
     """
     Returns a list of image stubs from the database.
     """
     try:
         #parse page and pagesize
         page = int(page)
-        pagesize = int(pagesize)
-        db_image_outputs = Session.query(DBImageOutput).order_by(DBImageOutput.image_input_id.desc()).offset(page*pagesize).limit(pagesize).all()
+        pageSize = int(pageSize)
+        db_image_outputs = Session.query(DBImageOutput).order_by(DBImageOutput.image_input_id.desc()).offset(page*pageSize).limit(pageSize).all()
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
@@ -83,12 +83,20 @@ def get_image_stubs(page: int, pagesize: int) -> Union[List[ImageInput], str]:
     except Exception as e:
         return f"{e}"
 
-def search_image_stubs(term:str) -> Union[List[ImageInput], str]:
+def search_image_stubs(term:str, page:int, page_size: int, model_id: Optional[str], negative_prompt: Optional[str]) -> Union[List[ImageInput], str]:
     """
     Returns a list of image stubs from the database.
     """
     try:
-        db_image_outputs = Session.query(DBImageOutput).join(DBImageInput).filter(DBImageInput.prompt.like(f'%{term}%')).all()
+        db_image_outputs = Session.query(DBImageOutput).join(DBImageInput)
+
+        if model_id is not None:
+            db_image_outputs = db_image_outputs.filter(DBImageInput.model_id == model_id)
+        if negative_prompt is not None:
+            db_image_outputs = db_image_outputs.filter(DBImageInput.negative_prompt.like(f'%{negative_prompt}%'))
+        if term is not None:
+            db_image_outputs = db_image_outputs.filter(DBImageInput.prompt.like(f'%{term}%'))
+        db_image_outputs = db_image_outputs.offset(page*page_size).limit(page_size).all()
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
