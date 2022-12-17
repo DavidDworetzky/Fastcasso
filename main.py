@@ -12,15 +12,23 @@ from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
 from app.mediators.image_diffusion import get_image_generation
 from app.models.request.image_search import image_search
+import logging
 
 #constants
 api_version = 0.1
+enhanced_logging = False
 
+if enhanced_logging:
+    logging.basicConfig()
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
+
+#initialization
 settings = settings.Settings()
 app = FastAPI()
 
 	
-
+#routes
 @app.get('/')
 def version():
     return {"Version" : f"{api_version}"}
@@ -57,12 +65,13 @@ async def search_image_stubs_endpoint(search: image_search):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
 
-@app.get("/image/search/{term}/page/{page}/pageSize/{pagesize}")
-async def search_image_stubs_endpoint(term:str, page:int, pagesize:int):
+@app.get("/image/search/{term}")
+async def search_image_stubs_endpoint(term:str):
     """
     Returns a list of image stubs from the database.
     """
-    image_stubs = search_image_stubs(term=term,page=page, page_size=pagesize, model_id = None, negative_prompt= None)
+    default_limit = 1000
+    image_stubs = search_image_stubs(term=term,page=0, page_size=default_limit, model_id = None, negative_prompt= None)
     if isinstance(image_stubs, str):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
