@@ -57,12 +57,12 @@ async def search_image_stubs_endpoint(search: image_search):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
 
-@app.get("/image/search/{term}")
-async def search_image_stubs_endpoint(term):
+@app.get("/image/search/{term}/page/{page}/pageSize/{pagesize}")
+async def search_image_stubs_endpoint(term:str, page:int, pagesize:int):
     """
     Returns a list of image stubs from the database.
     """
-    image_stubs = search_image_stubs(term=term)
+    image_stubs = search_image_stubs(term=term,page=page, page_size=pagesize, model_id = None, negative_prompt= None)
     if isinstance(image_stubs, str):
         raise HTTPException(status_code=500, detail=image_stubs)
     return image_stubs
