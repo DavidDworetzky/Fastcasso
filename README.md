@@ -6,6 +6,7 @@ Fastcasso makes running stable diffusion on a web server easy and fast.
 ## Pre installation steps
 1. huggingface-cli login
 2. If running from CLI instead of docker, `python initdb.py`
+3. `python bootstrap.py`
 
 ## Running with uvicorn
 
