@@ -3,7 +3,9 @@ from sqlalchemy.orm import relationship
 from app.models.database.database import Base
 
 class PipelinePreset(Base):
-    """Database Class used for storing additional pipeline presets"""
+    """
+    Database Class used for storing additional pipeline presets
+    """
     __tablename__ = 'pipeline_preset'
     pipeline_preset_id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
