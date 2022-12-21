@@ -6,6 +6,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - alembic=1.9.0=pyhd8ed1ab_0
   - anyio=3.6.2=pyhd8ed1ab_0
   - asgiref=3.5.2=py310hca03da5_0
   - attrs=21.4.0=pyhd3eb1b0_0
@@ -46,6 +47,7 @@ dependencies:
   - idna=3.4=py310hca03da5_0
   - importlib-metadata=5.0.0=pyha770c72_1
   - importlib_metadata=5.0.0=hd8ed1ab_1
+  - importlib_resources=5.10.1=pyhd8ed1ab_1
   - iniconfig=1.1.1=pyhd3eb1b0_0
   - joblib=1.2.0=pyhd8ed1ab_0
   - jpeg=9e=h1a28f6b_0
@@ -81,6 +83,8 @@ dependencies:
   - libxslt=1.1.35=h9833966_0
   - llvm-openmp=14.0.6=hc6e5704_0
   - lz4-c=1.9.3=hc377ac9_0
+  - mako=1.2.4=pyhd8ed1ab_0
+  - markupsafe=2.1.1=py310h1a28f6b_0
   - ncurses=6.3=h1a28f6b_3
   - nettle=3.7.3=h84b5d62_1
   - nspr=4.33=hc377ac9_0
