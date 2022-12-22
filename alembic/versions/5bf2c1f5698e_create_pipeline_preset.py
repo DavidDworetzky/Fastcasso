@@ -25,7 +25,9 @@ def upgrade() -> None:
         sa.Column('model_id', sa.String(), nullable=False),
         sa.Column('inference_steps', sa.Integer, nullable=False),
         sa.Column('default_width', sa.Integer, nullable=False),
-        sa.Column('default_height', sa.Integer, nullable=False)
+        sa.Column('default_height', sa.Integer, nullable=False),
+        sa.Column('keywords', sa.String(), nullable=True),
+        sa.Column('negative_keywords', sa.String(), nullable=True),
     )
 
 

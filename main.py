@@ -12,10 +12,12 @@ from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
 from app.mediators.image_diffusion import get_image_generation
 from app.models.request.image_search import image_search
+from app.mediators.presets import get_presets as get_all_presets, create_pipeline_preset
+from app.models.request.create_pipeline_preset import create_pipeline_preset as create_pipeline_preset_request
 import logging
 
 #constants
-api_version = 0.1
+api_version = 0.11
 enhanced_logging = False
 
 if enhanced_logging:
@@ -91,5 +93,11 @@ async def get_presets():
     """
     Returns a list of presets.
     """
-    return settings.presets
+    return get_all_presets(settings)
 
+@app.post("/preset")
+async def create_pipeline_preset_endpoint(preset: create_pipeline_preset_request):
+    """
+    Creates a new preset.
+    """
+    return create_pipeline_preset(preset)

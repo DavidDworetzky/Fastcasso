@@ -13,5 +13,7 @@ class PipelinePreset(Base):
     inference_steps = Column(Integer, nullable=False)
     default_width = Column(Integer, nullable=False)
     default_height = Column(Integer, nullable=False)
+    keywords = Column(String, nullable=True)
+    negative_keywords = Column(String, nullable=True)
 
 
