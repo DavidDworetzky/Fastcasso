@@ -6,15 +6,17 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - alembic=1.9.0=pyhd8ed1ab_0
   - anyio=3.6.2=pyhd8ed1ab_0
   - asgiref=3.5.2=py310hca03da5_0
+  - attrs=21.4.0=pyhd3eb1b0_0
   - blas=1.0=openblas
   - brotlipy=0.7.0=py310h1a28f6b_1002
   - bzip2=1.0.8=h620ffc9_4
   - c-ares=1.18.1=h3422bc3_0
-  - ca-certificates=2022.4.26=hca03da5_0
+  - ca-certificates=2022.12.7=h4653dfc_0
   - cairo=1.16.0=h29d4eff_2
-  - certifi=2022.6.15=py310hca03da5_0
+  - certifi=2022.12.7=pyhd8ed1ab_0
   - cffi=1.15.1=py310h22df2f2_0
   - charset-normalizer=2.0.4=pyhd3eb1b0_0
   - click=8.0.4=py310hca03da5_0
@@ -45,6 +47,8 @@ dependencies:
   - idna=3.4=py310hca03da5_0
   - importlib-metadata=5.0.0=pyha770c72_1
   - importlib_metadata=5.0.0=hd8ed1ab_1
+  - importlib_resources=5.10.1=pyhd8ed1ab_1
+  - iniconfig=1.1.1=pyhd3eb1b0_0
   - joblib=1.2.0=pyhd8ed1ab_0
   - jpeg=9e=h1a28f6b_0
   - krb5=1.19.3=hf9b2bbe_0
@@ -79,6 +83,8 @@ dependencies:
   - libxslt=1.1.35=h9833966_0
   - llvm-openmp=14.0.6=hc6e5704_0
   - lz4-c=1.9.3=hc377ac9_0
+  - mako=1.2.4=pyhd8ed1ab_0
+  - markupsafe=2.1.1=py310h1a28f6b_0
   - ncurses=6.3=h1a28f6b_3
   - nettle=3.7.3=h84b5d62_1
   - nspr=4.33=hc377ac9_0
@@ -87,19 +93,23 @@ dependencies:
   - numpy-base=1.23.3=py310h742c864_1
   - opencv=4.6.0=py310he2359d5_2
   - openh264=1.8.0=h98b2900_0
-  - openssl=1.1.1s=h1a28f6b_0
+  - openssl=1.1.1s=h03a7124_1
   - packaging=21.3=pyhd8ed1ab_0
   - pcre=8.45=hbdafb3b_0
   - pillow=9.2.0=py310h4d1bdd5_1
   - pip=22.2.2=py310hca03da5_0
   - pixman=0.40.0=h27ca646_0
+  - pluggy=1.0.0=py310hca03da5_1
   - psycopg2=2.8.6=py310hf27765b_1
+  - py=1.11.0=pyhd3eb1b0_0
   - pycparser=2.21=pyhd3eb1b0_0
   - pydantic=1.10.2=py310h1a28f6b_0
   - pyopenssl=22.0.0=pyhd3eb1b0_0
   - pyparsing=3.0.9=pyhd8ed1ab_0
   - pysocks=1.7.1=py310hca03da5_0
+  - pytest=7.1.2=py310hca03da5_0
   - python=3.10.6=hbdb9e5c_1
+  - python-dotenv=0.21.0=pyhd8ed1ab_0
   - pytorch=1.13.0=py3.10_0
   - qt-main=5.15.2=ha2d02b5_7
   - qt-webengine=5.15.9=h2903aaf_4
@@ -116,6 +126,7 @@ dependencies:
   - starlette=0.20.4=pyhd8ed1ab_1
   - tk=8.6.12=hb8d0fd4_0
   - tokenizers=0.11.4=py310h5c5695e_1
+  - tomli=1.2.2=pyhd3eb1b0_0
   - torchaudio=0.13.0=py310_cpu
   - torchvision=0.14.0=py310_cpu
   - tqdm=4.64.1=pyhd8ed1ab_0

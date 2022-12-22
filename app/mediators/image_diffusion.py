@@ -8,12 +8,14 @@ from app.models.database.image_input import ImageInput as DBImageInput
 from app.models.database.image_output import ImageOutput as DBImageOutput
 import io
 from app.models.image_generation import ImageGenerationStub
+from app.mediators.presets import get_presets
 
 def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
     Outputs an image from a prompt and persists to our database. 
     """
     try:
+        available_presets = get_presets(settings)
         keywords = None
         negative_keywords = None
         model_id = settings.simple_diffusion_model_id
@@ -21,7 +23,7 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         if preset_id is not None:
             preset_id = int(preset_id)
             #get preset from settings
-            preset = next((preset for preset in settings.presets if preset.preset_id == preset_id), None)
+            preset = next((preset for preset in available_presets if preset.preset_id == preset_id), None)
             if preset is not None:
                 #set model_id and inference_steps
                 model_id = preset.model_id
