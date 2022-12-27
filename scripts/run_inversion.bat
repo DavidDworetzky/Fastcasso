@@ -1,5 +1,6 @@
 set MODEL_NAME="runwayml/stable-diffusion-v1-5"
 set DATA_DIR="path-to-dir-containing-images"
+set TOKEN_NAME="<dog-remy>"
 
 accelerate launch textual_inversion.py ^
 --pretrained_model_name_or_path=$MODEL_NAME ^
