@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary
+import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary, DateTime
 from app.models.database.database import Base
 class ImageInput(Base):
     __tablename__ = 'image_input'
@@ -7,3 +8,4 @@ class ImageInput(Base):
     negative_prompt = Column(String, nullable=True)
     name = Column(String, nullable=False)
     model_id = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary
+import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary, DateTime
 from sqlalchemy.orm import relationship
 from app.models.database.database import Base
 from typing import Optional
@@ -10,4 +11,5 @@ class ImageOutput(Base):
     image_output_blob = Column(LargeBinary, nullable=False)
     image_input_id = Column(Integer, ForeignKey('image_input.image_input_id'), nullable=False)
     image_input: Optional[ImageInput] = relationship("ImageInput")
+    created_at = Column(DateTime, nullable=False, default = datetime.datetime.utcnow)
 
