@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary
+import datetime
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary, DateTime
 from sqlalchemy.orm import relationship
 from app.models.database.database import Base
 
@@ -15,5 +16,6 @@ class PipelinePreset(Base):
     default_height = Column(Integer, nullable=False)
     keywords = Column(String, nullable=True)
     negative_keywords = Column(String, nullable=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
 
 
