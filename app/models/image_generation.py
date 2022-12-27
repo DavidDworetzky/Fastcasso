@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import datetime
 
 @dataclass
 class ImageGenerationStub:
@@ -6,10 +7,12 @@ class ImageGenerationStub:
     name:str
     id: int
     model_id: str
+    created_at: datetime.datetime
 
 class ImageGeneration:
     prompt:str
     name:str
     id: int
     image:bytes
+    created_at: datetime.datetime
 
