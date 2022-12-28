@@ -80,7 +80,7 @@ def get_image_stubs(page: int, pageSize: int) -> Union[List[ImageInput], str]:
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
-            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id))
+            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id, created_at=db_image_output.created_at))
         return image_stubs
     except Exception as e:
         return f"{e}"
@@ -102,7 +102,7 @@ def search_image_stubs(term:str, page:int, page_size: int, model_id: Optional[st
         image_stubs = []
         for db_image_output in db_image_outputs:
             input = db_image_output.image_input
-            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id))
+            image_stubs.append(ImageGenerationStub(prompt=input.prompt, name=input.name, id=db_image_output.image_output_id, model_id=input.model_id, created_at= db_image_output.created_at))
         return image_stubs
     except Exception as e:
         return f"{e}"
@@ -113,7 +113,6 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     """
     try:
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
-        print(len(db_image_output.image_output_blob))
         return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
     except Exception as e:
         return f"{e}"
