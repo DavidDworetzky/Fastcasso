@@ -65,18 +65,11 @@ class StableDiffusion:
             #we enable attention slicing for mps to speed up performance on Mac M1 devices
             if self.device == "mps":
                 pipe.enable_attention_slicing()
-            try:
-                image = pipe(prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
-                return image
-            except Exception as ex:
-                print(traceback.format_exc())
-                # or
-                print(sys.exc_info()[2])
-                raise ex
+            image = pipe(prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
+            return image
         except Exception as ex:
             print ("Error in StableDiffusion.generate with model_id: " + self.model_id)
             print(traceback.format_exc())
-            # or
             print(sys.exc_info()[2])
             raise ex
         
