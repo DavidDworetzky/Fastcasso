@@ -68,8 +68,12 @@ class StableDiffusion:
             image = pipe(prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
             return image
         except Exception as ex:
-            print ("Error in StableDiffusion.generate with model_id: " + self.model_id)
-            print(traceback.format_exc())
-            print(sys.exc_info()[2])
+            self.log_pipeline_error(ex)
             raise ex
+
+    def log_pipeline_error(self, error):
+        print(f"Error in StableDiffusion.generate with model_id: {self.model_id}.")
+        print(traceback.format_exc())
+        print(sys.exc_info()[2])
+
         
