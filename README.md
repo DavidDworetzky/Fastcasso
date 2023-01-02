@@ -30,12 +30,13 @@ Fastcasso will also support other types of image generation / fine tune / asset 
 2. Mac also supported, simply swap out for MPS device type.
 3. Some Hardcoded presets include stable diffusion 1.4, 1.5, 2.0 and 2.1 with certain fine tunes. 512 and 768 resolution on certain diffuser pipelines.
 4. Supports search on generated images.
+5. Supports custom presets. (used for specifying parameters, keywords, negative keywords.)
 
 ## Feature Roadmap
 
 1. Fastcasso will support the following features in the future (view issues for exact list):
-- Dreambooth (custom finetune) training
-- Queued Jobs
-- Authorization
-- Custom preset creation
-- Sample UI
+- Textual embeddings.
+- Custom Model Training.
+- Queued Jobs.
+- In and Out painting.
+- Frontend for testing / exploration.
