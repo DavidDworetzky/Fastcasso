@@ -26,6 +26,14 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  width: 600px;
+}
+
+
+.content {
+  flex: 1 0 auto;
+  flex-direction: row;
+  background-color: red;
 }
 
 .App-link {

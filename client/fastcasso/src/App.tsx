@@ -37,6 +37,9 @@ function App() {
           Learn more
         </a>
       </header>
+      <div className="Content">
+        Content!
+      </div>
     </div>
   );
 }
