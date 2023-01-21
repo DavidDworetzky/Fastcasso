@@ -8,9 +8,11 @@ function tile (props: TileProperties) {
 }
 
 /* props */
-interface TileProperties {
+export interface TileProperties {
     image: string;
     alt?: string;
     width?: number;
     height?: number;
 }
+
+export default tile;
