@@ -1,5 +1,5 @@
 /*tile component. Given base 64 image data, it will render the image. */
-function tile (props: TileProperties) {
+function Tile (props: TileProperties) {
     return (
         <div style={{width: props.width ?? '400px', height: props.height ?? '400px'}}>
             <img src={props.image} alt={props.alt}/>
@@ -15,4 +15,4 @@ export interface TileProperties {
     height?: number;
 }
 
-export default tile;
+export default Tile;
