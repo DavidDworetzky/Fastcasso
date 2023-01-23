@@ -3,8 +3,31 @@ import Fastcasso from './fastcasso.png'
 import logo from './logo.svg';
 import './App.css';
 import Navigation from './navigation';
+import TileProperties from './Tile/Tile';
+import TileGrid from './Tile/TileGrid';
 
 function App() {
+
+  //tile grid is a flex container around tiles
+  const tiles = [
+      {
+        image: '',
+        alt: 'test',
+        width: 400,
+        height: 400
+      },
+      {
+        image: '',
+        alt: 'test',
+        width: 400,
+        height: 400
+      },
+      {
+        image: '',
+        alt: 'test',
+        width: 400,
+        height: 400
+      }];
   const links = [{
     name: 'Home',
     link: '/',
@@ -38,7 +61,7 @@ function App() {
         </a>
       </header>
       <div className="Content">
-        Content!!!
+        <TileGrid tiles={null}/>
       </div>
     </div>
   );
