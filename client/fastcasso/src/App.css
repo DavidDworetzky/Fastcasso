@@ -17,6 +17,19 @@
   }
 }
 
+main {
+  overflow-y: auto;
+}
+aside {
+  flex: 1 0 10%;
+}
+
+.Wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -27,21 +40,19 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  width:600px;
-}
-
-.Content {
-  flex: 1 0 auto;
-  flex-direction: row;
-  display: flex;
-  width:100%;
+  width: 600px;
 }
 
 .Container
 {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .App-link {
