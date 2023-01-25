@@ -19,6 +19,7 @@
 
 main {
   overflow-y: auto;
+  min-width:60vh;
 }
 aside {
   flex: 1 0 10%;
@@ -40,7 +41,7 @@ aside {
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-  width: 600px;
+  min-width: 40vh;
 }
 
 .Container

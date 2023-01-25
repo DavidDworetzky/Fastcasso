@@ -14,6 +14,9 @@ function App() {
   const tiles = [
     new TileData(BlackSquare, 'test', 400, 400),
     new TileData(BlackSquare, 'test', 400, 400),
+    new TileData(BlackSquare, 'test', 400, 400),
+    new TileData(BlackSquare, 'test', 400, 400),
+    new TileData(BlackSquare, 'test', 400, 400),
     new TileData(BlackSquare, 'test', 400, 400)] as TileProperties[];
   const tileGridProperties = {tiles: tiles};
   const links = [{
