@@ -4,6 +4,8 @@ import axios from 'axios';
 const { API_ENDPOINT } = process.env;
 const base = API_ENDPOINT
 
+//base search without advanced parameters
 export function search_images(query: string) {
-    return axios.get(`${base}/search/${query}`);
+    const encodedQuery = encodeURIComponent(query);
+    return axios.get(`${base}/search/${encodedQuery}`);
 }
