@@ -4,9 +4,9 @@ import BlackSquare from './black_square.jpg'
 import logo from './logo.svg';
 import './App.css';
 import Navigation from './navigation';
-import {TileProperties} from './Tile/Tile';
-import {TileData} from './Tile/Tile';
-import TileGrid from './Tile/TileGrid';
+import {TileProperties} from './Components/Tile/Tile';
+import {TileData} from './Components/Tile/Tile';
+import TileGrid from './Components/Tile/TileGrid';
 
 function App() {
 
