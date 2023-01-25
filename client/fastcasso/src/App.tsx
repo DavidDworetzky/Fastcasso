@@ -1,33 +1,21 @@
 import React from 'react';
 import Fastcasso from './fastcasso.png'
+import BlackSquare from './black_square.jpg'
 import logo from './logo.svg';
 import './App.css';
 import Navigation from './navigation';
-import TileProperties from './Tile/Tile';
+import {TileProperties} from './Tile/Tile';
+import {TileData} from './Tile/Tile';
 import TileGrid from './Tile/TileGrid';
 
 function App() {
 
   //tile grid is a flex container around tiles
   const tiles = [
-      {
-        image: '',
-        alt: 'test',
-        width: 400,
-        height: 400
-      },
-      {
-        image: '',
-        alt: 'test',
-        width: 400,
-        height: 400
-      },
-      {
-        image: '',
-        alt: 'test',
-        width: 400,
-        height: 400
-      }];
+    new TileData(BlackSquare, 'test', 400, 400),
+    new TileData(BlackSquare, 'test', 400, 400),
+    new TileData(BlackSquare, 'test', 400, 400)] as TileProperties[];
+  const tileGridProperties = {tiles: tiles};
   const links = [{
     name: 'Home',
     link: '/',
@@ -61,7 +49,7 @@ function App() {
         </a>
       </header>
       <div className="Content">
-        <TileGrid tiles={null}/>
+        <TileGrid {...tileGridProperties} />
       </div>
     </div>
   );
