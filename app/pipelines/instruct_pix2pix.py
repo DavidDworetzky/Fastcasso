@@ -10,7 +10,7 @@ import traceback
 import sys
 
 class InstructPix2Pix:
-    def __init__(self, model_id:str, device:str, flag_safety:bool, num_inference_steps = 50, guidance_scale:float = 7.5):
+    def __init__(self, model_id:str, device:str, flag_safety:bool, num_inference_steps = 50, guidance_scale:float = 7.0):
         self.model_id = model_id
         self.device = device
         self.guidance_scale = guidance_scale
@@ -24,8 +24,8 @@ class InstructPix2Pix:
             device = os.getenv("DEVICE_TYPE")
 
             model_id = "timbrooks/instruct-pix2pix"
-            pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(model_id, torch_dtype=torch.float16).to(device)
-            edit = pipe(image_input.prompt, image=image, num_inference_steps=self.num_inference_steps, image_guidance_scale=self.guidance_scale).images[0]
+            pipe = StableDiffusionInstructPix2PixPipeline.from_pretrained(model_id).to(device)
+            edit = pipe(image_input.prompt, image=image, num_inference_steps=self.num_inference_steps, guidance_scale=1.5, image_guidance_scale=self.guidance_scale).images[0]
             return edit
         except Exception as ex:
             self.log_pipeline_error(ex)

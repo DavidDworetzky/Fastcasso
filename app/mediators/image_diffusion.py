@@ -77,6 +77,7 @@ def generate_pix2pix_transform(image_transform_input: ImageTransformInput,  sett
     pix2pix is done without presets or prefixes.
     """
     try:
+        print("start pix2pix transform")
         pix2pix_model = "timbrooks/instruct-pix2pix"
         #persist image input for job
         db_image_input = DBImageInput(prompt=image_transform_input.prompt, name=image_transform_input.name, model_id=pix2pix_model, negative_prompt = "")
@@ -92,7 +93,7 @@ def generate_pix2pix_transform(image_transform_input: ImageTransformInput,  sett
         )
         #grab image to do image2image transform on.
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_transform_input.image_id).first()
-        to_transform_image = PILImage.open(db_image_output.image_output_blob)
+        to_transform_image = PILImage.open(io.BytesIO(db_image_output.image_output_blob))
         image = pix2pix.generate(image_transform_input, to_transform_image)
         #persist image output for job
         bytes_io_arr = io.BytesIO()
@@ -104,7 +105,7 @@ def generate_pix2pix_transform(image_transform_input: ImageTransformInput,  sett
         Session.commit()
         return StreamingResponse(io.BytesIO(output_blob), media_type="image/png")
 
-    except Exception as e:
+    except Exception as e:        
         return f"{e}"
 
 
