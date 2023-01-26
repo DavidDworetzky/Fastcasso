@@ -19,7 +19,7 @@ from app.models.request.create_pipeline_preset import create_pipeline_preset as 
 import logging
 
 #constants
-api_version = 0.11
+api_version = 0.12
 enhanced_logging = False
 
 if enhanced_logging:
