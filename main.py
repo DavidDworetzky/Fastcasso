@@ -2,6 +2,7 @@
 import sys
 from fastapi import FastAPI, HTTPException
 from app.models.image_input import ImageInput
+from app.models.image_transform_input import ImageTransformInput
 import uvicorn
 from typing import Optional
 from app.models import settings
@@ -9,6 +10,7 @@ import io
 from starlette.responses import StreamingResponse
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
+from app.mediators.image_diffusion import generate_pix2pix_transform
 from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
 from app.mediators.image_diffusion import get_image_generation
 from app.models.request.image_search import image_search
@@ -42,6 +44,17 @@ async def generate_image_endpoint(prompt, name, preset_id: Optional[int] = None,
     Outputs an image from a prompt.
     """
     image_output = generate_image_diffusion(ImageInput(prompt=prompt, name=name, negative_prompt=negative_prompt, height=height, width=width), settings, preset_id = preset_id)
+    if isinstance(image_output, str):
+        raise HTTPException(status_code=500, detail=image_output)
+    return image_output
+
+#transforms
+@app.get("/image/generate/transform/{prompt}/{name}/{image_id}")
+async def transform_image_endpoint(prompt, name, image_id, height: Optional[int] = None, width: Optional[int] = None):
+    """
+    Transforms an image from a prompt.
+    """
+    image_output = generate_pix2pix_transform(ImageTransformInput(prompt=prompt, name=name, height=height, width=width, image_id=image_id), settings)
     if isinstance(image_output, str):
         raise HTTPException(status_code=500, detail=image_output)
     return image_output
