@@ -137,7 +137,7 @@ dependencies:
   - zlib=1.2.13=h8cc25b3_0
   - zstd=1.5.2=h19a0ad4_0
   - pip:
-      - diffusers==0.11.1
+      - diffusers==0.12.0
       - filelock==3.9.0
       - huggingface-hub==0.11.1
       - regex==2022.10.31
