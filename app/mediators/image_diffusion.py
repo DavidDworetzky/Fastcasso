@@ -1,7 +1,9 @@
 from app.models.image_input import ImageInput
+from app.models.image_transform_input import ImageTransformInput
 from starlette.responses import StreamingResponse
 from typing import Union, List, Optional
 from app.pipelines.stable_diffusion import StableDiffusion
+from app.pipelines.instruct_pix2pix import InstructPix2Pix
 from app.models import settings
 from app.models.database.database import Session
 from app.models.database.image_input import ImageInput as DBImageInput
@@ -9,6 +11,7 @@ from app.models.database.image_output import ImageOutput as DBImageOutput
 import io
 from app.models.image_generation import ImageGenerationStub
 from app.mediators.presets import get_presets
+from PIL import Image as PILImage
 
 def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
@@ -67,6 +70,44 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
 
     except Exception as e:
         return f"{e}"
+
+def generate_pix2pix_transform(image_transform_input: ImageTransformInput,  settings: settings.Settings) -> Union[StreamingResponse, str]:
+    """
+    Generates a pix2pix transformation of an image.
+    pix2pix is done without presets or prefixes.
+    """
+    try:
+        pix2pix_model = "timbrooks/instruct-pix2pix"
+        #persist image input for job
+        db_image_input = DBImageInput(prompt=image_transform_input.prompt, name=image_transform_input.name, model_id=pix2pix_model, negative_prompt = "")
+        Session.add(db_image_input)
+        Session.commit()
+        #generate image
+        pix2pix = (
+        InstructPix2Pix(
+            pix2pix_model,
+            settings.simple_diffusion_device, 
+            settings.safety_check,
+            )
+        )
+        #grab image to do image2image transform on.
+        db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_transform_input.image_id).first()
+        to_transform_image = PILImage.open(db_image_output.image_output_blob)
+        image = pix2pix.generate(image_transform_input, to_transform_image)
+        #persist image output for job
+        bytes_io_arr = io.BytesIO()
+        image.save(bytes_io_arr, format="PNG")
+        output_blob = bytes_io_arr.getvalue()
+        #set db image output
+        db_image_output = DBImageOutput(image_input_id=db_image_input.image_input_id, image_output_blob=output_blob) 
+        Session.add(db_image_output)
+        Session.commit()
+        return StreamingResponse(io.BytesIO(output_blob), media_type="image/png")
+
+    except Exception as e:
+        return f"{e}"
+
+
 
 def get_image_stubs(page: int, pageSize: int) -> Union[List[ImageInput], str]:
     """
