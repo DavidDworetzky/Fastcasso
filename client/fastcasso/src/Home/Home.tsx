@@ -4,8 +4,12 @@ import TileGrid from '../Components/Tile/TileGrid';
 import {TileGridProperties} from '../Components/Tile/TileGrid';
 import {TileData} from '../Components/Tile/Tile';
 import BlackSquare from '../black_square.jpg'
+import {GetHomeImages} from '../Client/resources';
 
 function Home(){
+    //get home images
+    const homeImages = GetHomeImages();
+    
     //request basic search to construct grid
 
     //limit stubs to top 10 
