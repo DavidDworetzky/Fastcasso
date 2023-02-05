@@ -3,6 +3,7 @@ import axios from 'axios';
 // import 
 const base = process.env.REACT_APP_API_ENDPOINT;
 const homeImageCount = 10;
+const root = '';
 
 console.log(process.env);
 console.log(base);
@@ -11,14 +12,14 @@ console.log(base);
 //returns promise of image results
 export function SearchImages(query: string) {
     const encodedQuery = encodeURIComponent(query);
-    return axios.get(`${base}/search/${encodedQuery}`);
+    return axios.get(`${root}/image/search/${encodedQuery}`);
 }
 
 export function GetHomeImages() : Promise<Array<ImageStub>> {
     const query = ' ';
     const wrappedHome = new Promise<Array<ImageStub>>((resolve, reject) => {
         const homeImages = SearchImages(query);
-        SearchImages(query).then(
+        homeImages.then(
             (response: any) => {
                 resolve(response.slice(0, homeImageCount));
             }
@@ -32,7 +33,7 @@ export function GetHomeImages() : Promise<Array<ImageStub>> {
 }
 
 export function GetImageById(id: string) {
-   return axios.get(`${base}/image/${id}`);
+   return axios.get(`${root}/image/${id}`);
 }
 
 export interface ImageStub {
