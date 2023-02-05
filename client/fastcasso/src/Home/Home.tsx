@@ -39,12 +39,6 @@ function Home(){
         setTileData(tileData);
       })
     });
-    
-
-    //limit stubs to top 10 
-
-    //create tile grid properties from stubs
-    //mock tile grid
     const tileGridProperties = {tiles: tileData};
 
     return <TileGrid {...tileGridProperties} />
