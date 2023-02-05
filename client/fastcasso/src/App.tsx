@@ -3,6 +3,7 @@ import Fastcasso from './fastcasso.png'
 import './App.css';
 import Navigation from './navigation';
 import Home from './Home/Home';
+import Search from './Search/Search';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -43,7 +44,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home/>}/>
-            <Route path="/search" element={<h1>search</h1>}/>
+            <Route path="/search" element={<Search/>}/>
             <Route path="/generate" element={<h1>generate</h1>}/>
           </Routes>
         </BrowserRouter>

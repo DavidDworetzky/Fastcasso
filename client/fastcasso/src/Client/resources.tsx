@@ -10,9 +10,21 @@ console.log(base);
 
 //base search without advanced parameters
 //returns promise of image results
-export function SearchImages(query: string) {
+export function SearchImages(query: string, limit: number = 10) : Promise<Array<ImageStub>> {
     const encodedQuery = encodeURIComponent(query);
-    return axios.get(`${root}/image/search/${encodedQuery}`);
+    const wrappedImages = new Promise<Array<ImageStub>>((resolve, reject) => {
+        const images = axios.get(`${root}/image/search/${encodedQuery}`);
+        images.then(
+            (response: any) => {
+                resolve(response.data.slice(0, limit));
+            }
+        ).catch(
+            (error:any) => {
+                reject(error);
+            }
+        )
+    });
+    return wrappedImages;
 }
 
 export function GetHomeImages() : Promise<Array<ImageStub>> {
