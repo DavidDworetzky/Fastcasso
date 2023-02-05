@@ -33,9 +33,14 @@ export function GetHomeImages() : Promise<Array<ImageStub>> {
 }
 
 export function GetImageById(id: string) {
-   return axios.get(`${root}/image/${id}`);
+   return axios.get(`${root}/image/${id}`, {
+    responseType: 'arraybuffer'
+   });
 }
 
 export interface ImageStub {
     id: string;
+    prompt: string;
+    name: string;
+    model_id: string;
 }

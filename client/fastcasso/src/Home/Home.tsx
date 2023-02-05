@@ -6,18 +6,23 @@ import {TileData} from '../Components/Tile/Tile';
 import BlackSquare from '../black_square.jpg'
 import {GetHomeImages, GetImageById} from '../Client/resources';
 import React from 'react';
+import { useEffect } from 'react';
+import { Buffer } from 'buffer';
 
 function Home(){
     const mockTiles = [
-      new TileData(BlackSquare, 'test', 400, 400),
-      new TileData(BlackSquare, 'test', 400, 400),
-      new TileData(BlackSquare, 'test', 400, 400),
-      new TileData(BlackSquare, 'test', 400, 400),
-      new TileData(BlackSquare, 'test', 400, 400),
-      new TileData(BlackSquare, 'test', 400, 400)] as TileProperties[];
+      new TileData(BlackSquare, 'test', 400, 400, false),
+      new TileData(BlackSquare, 'test', 400, 400, false),
+      new TileData(BlackSquare, 'test', 400, 400, false),
+      new TileData(BlackSquare, 'test', 400, 400, false),
+      new TileData(BlackSquare, 'test', 400, 400, false),
+      new TileData(BlackSquare, 'test', 400, 400, false)] as TileProperties[];
     const tileDimension = 400;
     //set state hook of tile data
     const [tileData, setTileData] = React.useState<TileProperties[]>(mockTiles);
+
+    //initial load of home images
+    useEffect(() => {
     //get home images
     const homeImages = GetHomeImages();
     //get image contents from image stubs
@@ -34,11 +39,13 @@ function Home(){
         const tileData = result.map((ele) => {
           const selectedStub = imageStubs[counter];
           counter++;
-          return new TileData(ele.data, selectedStub.id, tileDimension, tileDimension);
+          const base64 = Buffer.from(ele.data, 'binary').toString('base64')
+          return new TileData(base64, selectedStub.id, tileDimension, tileDimension);
         });
         setTileData(tileData);
       })
     });
+  }, []);
     const tileGridProperties = {tiles: tileData};
 
     return <TileGrid {...tileGridProperties} />
