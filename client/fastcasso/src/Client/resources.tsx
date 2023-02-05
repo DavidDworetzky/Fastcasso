@@ -1,9 +1,12 @@
 // import axios
 import axios from 'axios';
 // import 
-const { API_ENDPOINT } = process.env;
-const base = API_ENDPOINT
+const { REACT_APP_API_ENDPOINT } = process.env;
+const base = REACT_APP_API_ENDPOINT;
 const homeImageCount = 10;
+
+console.log(process.env);
+console.log(base);
 
 //base search without advanced parameters
 //returns promise of image results
