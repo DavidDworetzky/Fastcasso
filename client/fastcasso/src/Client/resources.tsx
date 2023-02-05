@@ -1,8 +1,7 @@
 // import axios
 import axios from 'axios';
 // import 
-const { REACT_APP_API_ENDPOINT } = process.env;
-const base = REACT_APP_API_ENDPOINT;
+const base = process.env.REACT_APP_API_ENDPOINT;
 const homeImageCount = 10;
 
 console.log(process.env);
