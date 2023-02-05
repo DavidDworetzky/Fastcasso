@@ -21,7 +21,7 @@ export function GetHomeImages() : Promise<Array<ImageStub>> {
         const homeImages = SearchImages(query);
         homeImages.then(
             (response: any) => {
-                resolve(response.slice(0, homeImageCount));
+                resolve(response.data.slice(0, homeImageCount));
             }
         ).catch(
             (error:any) => {
