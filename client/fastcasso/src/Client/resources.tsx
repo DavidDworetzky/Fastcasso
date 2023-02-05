@@ -12,9 +12,9 @@ export function SearchImages(query: string) {
     return axios.get(`${base}/search/${encodedQuery}`);
 }
 
-export function GetHomeImages() {
+export function GetHomeImages() : Promise<Array<ImageStub>> {
     const query = ' ';
-    const wrappedHome = new Promise((resolve, reject) => {
+    const wrappedHome = new Promise<Array<ImageStub>>((resolve, reject) => {
         const homeImages = SearchImages(query);
         SearchImages(query).then(
             (response: any) => {
@@ -27,6 +27,10 @@ export function GetHomeImages() {
         )
     });
     return wrappedHome
+}
+
+export function GetImageById(id: string) {
+   return axios.get(`${base}/image/${id}`);
 }
 
 export interface ImageStub {
