@@ -38,6 +38,15 @@ export function GetImageById(id: string) {
    });
 }
 
+export function GenerateImage(request: GenerateRequest){
+    const encodedPrompt = encodeURIComponent(request.prompt);
+    const encodedName = encodeURIComponent(request.name);
+    const encodedNegative = encodeURIComponent(request.negative_prompt);
+    return axios.get(`${root}/image/generate/${encodedPrompt}/${encodedName}?preset_id=${request.preset_id}&height=${request.height}&width=${request.width}&negative_prompt=${encodedNegative}`, {
+        responseType: 'arraybuffer'
+    });
+}
+
 export function GetPresets() : Promise<Array<Preset>> {
     const presets = new Promise<Array<Preset>>((resolve, reject) => {
         const presetPromise = axios.get(`${root}/presets`);
@@ -52,6 +61,15 @@ export function GetPresets() : Promise<Array<Preset>> {
         )
     });
     return presets;
+}
+
+export interface GenerateRequest {
+    prompt: string;
+    name: string;
+    preset_id: number;
+    negative_prompt: string;
+    height: number;
+    width: number;
 }
 
 export interface ImageStub {
