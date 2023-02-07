@@ -77,7 +77,6 @@ def generate_pix2pix_transform(image_transform_input: ImageTransformInput,  sett
     pix2pix is done without presets or prefixes.
     """
     try:
-        print("start pix2pix transform")
         pix2pix_model = "timbrooks/instruct-pix2pix"
         #persist image input for job
         db_image_input = DBImageInput(prompt=image_transform_input.prompt, name=image_transform_input.name, model_id=pix2pix_model, negative_prompt = "")

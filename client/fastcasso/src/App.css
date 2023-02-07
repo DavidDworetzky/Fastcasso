@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 2s;
+  }
+}
+
+main {
+  overflow-y: auto;
+  min-width:60vh;
+}
+aside {
+  flex: 1 0 10%;
+}
+
+.Wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex: 1 0 10%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  min-width: 40vh;
+}
+
+.Search-Button {
+  width: 2rem;
+  cursor: pointer;
+  margin: 0 0.5rem;
+}
+
+.Container
+{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
