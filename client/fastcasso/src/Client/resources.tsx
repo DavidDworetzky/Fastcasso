@@ -38,9 +38,35 @@ export function GetImageById(id: string) {
    });
 }
 
+export function GetPresets() : Promise<Array<Preset>> {
+    const presets = new Promise<Array<Preset>>((resolve, reject) => {
+        const presetPromise = axios.get(`${root}/presets`);
+        presetPromise.then(
+            (response: any) => {
+                resolve(response.data);
+            }
+        ).catch(
+            (error:any) => {
+                reject(error);
+            }
+        )
+    });
+    return presets;
+}
+
 export interface ImageStub {
     id: string;
     prompt: string;
     name: string;
     model_id: string;
+}
+
+export interface Preset {
+    preset_id: number,
+    model_id: string,
+    inference_steps: number,
+    default_width: number,
+    default_height: number,
+    keywords: string,
+    negative_keywords : string
 }

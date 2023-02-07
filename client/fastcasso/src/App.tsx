@@ -4,6 +4,7 @@ import './App.css';
 import Navigation from './navigation';
 import Home from './Home/Home';
 import Search from './Search/Search';
+import Generate from './Generate/Generate';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/search" element={<Search/>}/>
-            <Route path="/generate" element={<h1>generate</h1>}/>
+            <Route path="/generate" element={<Generate/>}/>
           </Routes>
         </BrowserRouter>
 

@@ -10,7 +10,7 @@ export default function SearchBar(props: SearchBarProperties) {
                     className="block w-full px-4 py-2 text-purple-700 bg-white border rounded-full focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="Search..."
                 />
-                <button className="px-4 text-white white rounded-full w-8 ">
+                <button className="px-4 text-white white rounded-full w-8 " onClick={props.onClick}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-5 h-5"
@@ -33,4 +33,5 @@ export default function SearchBar(props: SearchBarProperties) {
 
 export interface SearchBarProperties {
     onChange: any;
+    onClick: any;
 }

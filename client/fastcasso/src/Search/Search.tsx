@@ -23,13 +23,11 @@ function Home() {
     const [tileData, setTileData] = React.useState<TileProperties[]>(mockTiles);
     const [searchTerm, setSearchTerm] = React.useState<string>(' ');
 
-    const onTermChange = (term: any) => {
-        //if term is a string, do not unpack
-        const unpackedTerm = typeof term === 'string' ? term : term.target.value;
-        setSearchTerm(unpackedTerm);
+    const onSearchClick = () => {
+        const term = searchTerm;
 
         //get home images
-        const homeImages = SearchImages(unpackedTerm);
+        const homeImages = SearchImages(term);
         //get image contents from image stubs
         homeImages.then((result) => {
             let imageStubs = [] as Array<any>;
@@ -51,11 +49,16 @@ function Home() {
             })
         });
     }
+    const onTermChange = (term: any) => {
+        //if term is a string, do not unpack
+        const unpackedTerm = typeof term === 'string' ? term : term.target.value;
+        setSearchTerm(unpackedTerm);
+    }
     //load of search images
     useEffect(() => {
         onTermChange(searchTerm);
     }, []);
-    const searchBarProperties = { onChange: onTermChange};
+    const searchBarProperties = { onChange: onTermChange, onClick: onSearchClick};
     const tileGridProperties = { tiles: tileData };
 
     return (
