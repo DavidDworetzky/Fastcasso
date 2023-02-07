@@ -29,19 +29,7 @@ export function SearchImages(query: string, limit: number = 10) : Promise<Array<
 
 export function GetHomeImages() : Promise<Array<ImageStub>> {
     const query = ' ';
-    const wrappedHome = new Promise<Array<ImageStub>>((resolve, reject) => {
-        const homeImages = SearchImages(query);
-        homeImages.then(
-            (response: any) => {
-                resolve(response.data.slice(0, homeImageCount));
-            }
-        ).catch(
-            (error:any) => {
-                reject(error);
-            }
-        )
-    });
-    return wrappedHome
+    return SearchImages(query, homeImageCount);
 }
 
 export function GetImageById(id: string) {
