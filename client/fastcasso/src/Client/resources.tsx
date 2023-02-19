@@ -38,6 +38,10 @@ export function GetImageById(id: string) {
    });
 }
 
+export function GetImagesByIds(ids: string[]) {
+    return axios.post(`${root}/image/multiple`, {ids: ids}, {});
+}
+
 export function GenerateImage(request: GenerateRequest){
     const encodedPrompt = encodeURIComponent(request.prompt);
     const encodedName = encodeURIComponent(request.name);

@@ -4,10 +4,11 @@ import TileGrid from '../Components/Tile/TileGrid';
 import {TileGridProperties} from '../Components/Tile/TileGrid';
 import {TileData} from '../Components/Tile/Tile';
 import BlackSquare from '../black_square.jpg'
-import {GetHomeImages, GetImageById} from '../Client/resources';
+import {GetHomeImages, GetImageById, GetImagesByIds} from '../Client/resources';
 import React from 'react';
 import { useEffect } from 'react';
 import { Buffer } from 'buffer';
+import * as JSZip from 'jszip';
 
 function Home(){
     const mockTiles = [
@@ -28,22 +29,33 @@ function Home(){
     //get image contents from image stubs
     homeImages.then((result) => {
       let imageStubs = [] as Array<any>;
-      let promises = result.map((ele) => {
-        imageStubs.push(ele);
-        return GetImageById(ele.id);
-      });
-
-      const imageResults = Promise.all(promises);
-      imageResults.then((result) => {
+      //push image stubs from homeImages
+      for(let i = 0; i < result.length; i++){
+        imageStubs.push(result[i]);
+      }
+      //get image contents for all stubs
+      const imageZip = GetImagesByIds(imageStubs.map((ele) => ele.id));
+      
+      imageZip.then((result) => {
+        const imageFiles = new Array<Promise<any>>();
+        JSZip.loadAsync(result.data)
+        .then(function(zip) {
+            for(let j = 0; j < imageStubs.length; j++){
+              console.log(zip);
+              imageFiles.push(zip.file(`${imageStubs[j].id}.png`)?.async("string") ?? Promise.resolve(null));
+            }
+          });
+        Promise.all(imageFiles).then((resultFiles) => {
         let counter = 0;
-        const tileData = result.map((ele) => {
+        const tileData = resultFiles.map((ele) => {
           const selectedStub = imageStubs[counter];
           counter++;
           const base64 = Buffer.from(ele.data, 'binary').toString('base64')
           return new TileData(base64, selectedStub.id, tileDimension, tileDimension);
         });
         setTileData(tileData);
-      })
+      });
+    });
     });
   }, []);
     const tileGridProperties = {tiles: tileData};
