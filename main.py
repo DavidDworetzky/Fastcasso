@@ -107,7 +107,7 @@ async def get_images_endpoint(ids: image_multiple):
     """
     Returns a list of images from the database.
     """
-    image_ids = ids.ids
+    image_ids = [int(x) for x in ids.ids]
     image_outputs = get_image_generations(image_ids)
     if isinstance(image_outputs, str):
         raise HTTPException(status_code=500, detail=image_outputs)

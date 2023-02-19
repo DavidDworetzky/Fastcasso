@@ -1,6 +1,7 @@
 from app.models.image_input import ImageInput
 from app.models.image_transform_input import ImageTransformInput
 from starlette.responses import StreamingResponse
+from fastapi.responses import StreamingResponse as FastAPIStreamingResponse
 from typing import Union, List, Optional
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.pipelines.instruct_pix2pix import InstructPix2Pix
@@ -168,7 +169,11 @@ def get_image_generations(image_output_ids: List[int]) -> Union[StreamingRespons
         zipfile_arr = io.BytesIO()
         with zipfile.ZipFile(zipfile_arr, mode='w') as zip_file:
             for db_image_output in db_image_outputs:
-                zip_file.writestr(f"{db_image_output.image_output_id}.png", db_image_output.image_output_blob)
-        return StreamingResponse(zipfile_arr, media_type="application/zip")
+                file_name = f"{db_image_output.image_output_id}.png"
+                zip_file.writestr(file_name, db_image_output.image_output_blob)
+                headers = {'Content-Disposition': 'attachment; filename="images.zip"'}
+            zipfile_arr.seek(0)
+            return FastAPIStreamingResponse(io.BytesIO(zipfile_arr.getbuffer()), media_type="application/x-zip-compressed", headers=headers)    
     except Exception as e:
+        print(e)
         return f"{e}"
