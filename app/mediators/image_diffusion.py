@@ -12,6 +12,7 @@ import io
 from app.models.image_generation import ImageGenerationStub
 from app.mediators.presets import get_presets
 from PIL import Image as PILImage
+import zipfile
 
 def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
@@ -155,5 +156,19 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     try:
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
         return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
+    except Exception as e:
+        return f"{e}"
+
+def get_image_generations(image_output_ids: List[int]) -> Union[StreamingResponse, str]:
+    """
+    Returns multiple images from the database as a zip file.
+    """
+    try:
+        db_image_outputs = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id.in_(image_output_ids)).all()
+        zipfile_arr = io.BytesIO()
+        with zipfile.ZipFile(zipfile_arr, mode='w') as zip_file:
+            for db_image_output in db_image_outputs:
+                zip_file.writestr(f"{db_image_output.image_output_id}.png", db_image_output.image_output_blob)
+        return StreamingResponse(zipfile_arr, media_type="application/zip")
     except Exception as e:
         return f"{e}"
