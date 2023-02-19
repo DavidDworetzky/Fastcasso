@@ -167,13 +167,18 @@ def get_image_generations(image_output_ids: List[int]) -> Union[StreamingRespons
     try:
         db_image_outputs = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id.in_(image_output_ids)).all()
         zipfile_arr = io.BytesIO()
-        with zipfile.ZipFile(zipfile_arr, mode='w') as zip_file:
-            for db_image_output in db_image_outputs:
-                file_name = f"{db_image_output.image_output_id}.png"
-                zip_file.writestr(file_name, db_image_output.image_output_blob)
-                headers = {'Content-Disposition': 'attachment; filename="images.zip"'}
-            zipfile_arr.seek(0)
-            return FastAPIStreamingResponse(io.BytesIO(zipfile_arr.getbuffer()), media_type="application/x-zip-compressed", headers=headers)    
+        zip_file = zipfile.ZipFile(zipfile_arr, mode='w')
+        for db_image_output in db_image_outputs:
+            file_name = f"{db_image_output.image_output_id}.png"
+            #first, write the bytesIO buffer
+            temp_stream = io.BytesIO(db_image_output.image_output_blob)
+            temp_stream.seek(0)
+            #write string
+            zip_file.writestr(file_name, temp_stream.getbuffer(), compress_type=zipfile.ZIP_DEFLATED)
+        zipfile_arr.seek(0)
+        #close zip file to write full response
+        zip_file.close()
+        headers = {'Content-Disposition': 'attachment; filename="images.zip"'}
+        return FastAPIStreamingResponse(io.BytesIO(zipfile_arr.getbuffer()), media_type="application/x-zip-compressed", headers=headers)    
     except Exception as e:
-        print(e)
         return f"{e}"
