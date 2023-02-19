@@ -35,27 +35,27 @@ function Home(){
       }
       //get image contents for all stubs
       const imageZip = GetImagesByIds(imageStubs.map((ele) => ele.id));
-      
+
       imageZip.then((result) => {
         const imageFiles = new Array<Promise<any>>();
         JSZip.loadAsync(result.data)
         .then(function(zip) {
             for(let j = 0; j < imageStubs.length; j++){
               console.log(zip);
-              imageFiles.push(zip.file(`${imageStubs[j].id}.png`)?.async("string") ?? Promise.resolve(null));
+              imageFiles.push(zip.file(`${imageStubs[j].id}.png`)?.async("base64") ?? Promise.resolve(null));
             }
+            Promise.all(imageFiles).then((resultFiles) => {
+              let counter = 0;
+              const tileData = resultFiles.map((ele) => {
+                const selectedStub = imageStubs[counter];
+                counter++;
+                const base64 = ele;
+                return new TileData(base64, selectedStub.id, tileDimension, tileDimension);
+              });
+              setTileData(tileData);
+            });
           });
-        Promise.all(imageFiles).then((resultFiles) => {
-        let counter = 0;
-        const tileData = resultFiles.map((ele) => {
-          const selectedStub = imageStubs[counter];
-          counter++;
-          const base64 = Buffer.from(ele.data, 'binary').toString('base64')
-          return new TileData(base64, selectedStub.id, tileDimension, tileDimension);
-        });
-        setTileData(tileData);
       });
-    });
     });
   }, []);
     const tileGridProperties = {tiles: tileData};

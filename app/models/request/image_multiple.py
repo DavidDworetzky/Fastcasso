@@ -5,4 +5,4 @@ from pydantic import BaseModel
 
 
 class image_multiple(BaseModel):
-    ids: List[str]
+    ids: List[int]

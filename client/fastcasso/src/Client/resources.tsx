@@ -38,8 +38,8 @@ export function GetImageById(id: string) {
    });
 }
 
-export function GetImagesByIds(ids: string[]) {
-    return axios.post(`${root}/image/multiple`, {ids: ids}, {});
+export function GetImagesByIds(ids: number[]) {
+    return axios.post(`${root}/image/multiple`, {ids: ids}, {responseType: 'arraybuffer'});
 }
 
 export function GenerateImage(request: GenerateRequest){
