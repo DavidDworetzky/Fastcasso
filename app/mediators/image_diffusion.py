@@ -160,7 +160,7 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     except Exception as e:
         return f"{e}"
 
-def get_image_generations(image_output_ids: List[int]) -> Union[StreamingResponse, str]:
+def get_image_generations(image_output_ids: List[int]) -> Union[FastAPIStreamingResponse, str]:
     """
     Returns multiple images from the database as a zip file.
     """
