@@ -2,21 +2,21 @@
 import axios from 'axios';
 // import 
 const base = process.env.REACT_APP_API_ENDPOINT;
-const homeImageCount = 10;
+const homeImageMaxCount = 1000;
+const homeImagePageSize = 10;
 const root = '';
-
-console.log(process.env);
-console.log(base);
 
 //base search without advanced parameters
 //returns promise of image results
-export function SearchImages(query: string, limit: number = 10) : Promise<Array<ImageStub>> {
+export function SearchImages(query: string, page:number = 0, limit: number = 1000) : Promise<ImageStubCollection> {
     const encodedQuery = encodeURIComponent(query);
-    const wrappedImages = new Promise<Array<ImageStub>>((resolve, reject) => {
+    const lowerIndex = page * homeImagePageSize;
+    const upperIndex = lowerIndex + homeImagePageSize - 1;
+    const wrappedImages = new Promise<ImageStubCollection>((resolve, reject) => {
         const images = axios.get(`${root}/image/search/${encodedQuery}`);
         images.then(
             (response: any) => {
-                resolve(response.data.slice(0, limit));
+                resolve({images: response.data.slice(lowerIndex, upperIndex), count: response.data.length});
             }
         ).catch(
             (error:any) => {
@@ -27,15 +27,19 @@ export function SearchImages(query: string, limit: number = 10) : Promise<Array<
     return wrappedImages;
 }
 
-export function GetHomeImages() : Promise<Array<ImageStub>> {
+export function GetHomeImages(page: number) : Promise<ImageStubCollection> {
     const query = ' ';
-    return SearchImages(query, homeImageCount);
+    return SearchImages(query, page, homeImageMaxCount);
 }
 
 export function GetImageById(id: string) {
    return axios.get(`${root}/image/${id}`, {
     responseType: 'arraybuffer'
    });
+}
+
+export function GetImagesByIds(ids: number[]) {
+    return axios.post(`${root}/image/multiple`, {ids: ids}, {responseType: 'arraybuffer'});
 }
 
 export function GenerateImage(request: GenerateRequest){
@@ -61,6 +65,11 @@ export function GetPresets() : Promise<Array<Preset>> {
         )
     });
     return presets;
+}
+
+export interface ImageStubCollection {
+    images: Array<ImageStub>;
+    count: number;
 }
 
 export interface GenerateRequest {

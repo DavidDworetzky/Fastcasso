@@ -1,6 +1,7 @@
 from app.models.image_input import ImageInput
 from app.models.image_transform_input import ImageTransformInput
 from starlette.responses import StreamingResponse
+from fastapi.responses import StreamingResponse as FastAPIStreamingResponse
 from typing import Union, List, Optional
 from app.pipelines.stable_diffusion import StableDiffusion
 from app.pipelines.instruct_pix2pix import InstructPix2Pix
@@ -12,6 +13,7 @@ import io
 from app.models.image_generation import ImageGenerationStub
 from app.mediators.presets import get_presets
 from PIL import Image as PILImage
+import zipfile
 
 def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
@@ -155,5 +157,28 @@ def get_image_generation(image_output_id: int) -> Union[StreamingResponse, str]:
     try:
         db_image_output = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id == image_output_id).first()
         return StreamingResponse(io.BytesIO(db_image_output.image_output_blob), media_type="image/png")
+    except Exception as e:
+        return f"{e}"
+
+def get_image_generations(image_output_ids: List[int]) -> Union[FastAPIStreamingResponse, str]:
+    """
+    Returns multiple images from the database as a zip file.
+    """
+    try:
+        db_image_outputs = Session.query(DBImageOutput).filter(DBImageOutput.image_output_id.in_(image_output_ids)).all()
+        zipfile_arr = io.BytesIO()
+        zip_file = zipfile.ZipFile(zipfile_arr, mode='w')
+        for db_image_output in db_image_outputs:
+            file_name = f"{db_image_output.image_output_id}.png"
+            #first, write the bytesIO buffer
+            temp_stream = io.BytesIO(db_image_output.image_output_blob)
+            temp_stream.seek(0)
+            #write string
+            zip_file.writestr(file_name, temp_stream.getbuffer(), compress_type=zipfile.ZIP_DEFLATED)
+        zipfile_arr.seek(0)
+        #close zip file to write full response
+        zip_file.close()
+        headers = {'Content-Disposition': 'attachment; filename="images.zip"'}
+        return FastAPIStreamingResponse(io.BytesIO(zipfile_arr.getbuffer()), media_type="application/x-zip-compressed", headers=headers)    
     except Exception as e:
         return f"{e}"

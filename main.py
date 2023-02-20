@@ -12,8 +12,9 @@ from app.pipelines.stable_diffusion import StableDiffusion
 from app.mediators.image_diffusion import generate_image_diffusion
 from app.mediators.image_diffusion import generate_pix2pix_transform
 from app.mediators.image_diffusion import get_image_stubs, search_image_stubs
-from app.mediators.image_diffusion import get_image_generation
+from app.mediators.image_diffusion import get_image_generation, get_image_generations
 from app.models.request.image_search import image_search
+from app.models.request.image_multiple import image_multiple
 from app.mediators.presets import get_presets as get_all_presets, create_pipeline_preset
 from app.models.request.create_pipeline_preset import create_pipeline_preset as create_pipeline_preset_request
 import logging
@@ -100,6 +101,17 @@ async def get_image_generation_endpoint(image_output_id):
     if isinstance(image_output, str):
         raise HTTPException(status_code=500, detail=image_output)
     return image_output
+
+@app.post("/image/multiple")
+async def get_images_endpoint(ids: image_multiple):
+    """
+    Returns a list of images from the database.
+    """
+    image_ids = ids.ids
+    image_outputs = get_image_generations(image_ids)
+    if isinstance(image_outputs, str):
+        raise HTTPException(status_code=500, detail=image_outputs)
+    return image_outputs
 
 @app.get("/presets")
 async def get_presets():
