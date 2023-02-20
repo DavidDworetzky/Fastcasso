@@ -1,5 +1,5 @@
 # Fastcasso
-Fastcasso is a web server for diffusion based image generation
+Fastcasso is a web server and UI for diffusion based image generation
 Fastcasso makes running stable diffusion on a web server easy and fast.
 Fastcasso will also support other types of image generation / fine tune / asset generation in the future.
 
@@ -31,6 +31,7 @@ Fastcasso will also support other types of image generation / fine tune / asset 
 3. Some Hardcoded presets include stable diffusion 1.4, 1.5, 2.0 and 2.1 with certain fine tunes. 512 and 768 resolution on certain diffuser pipelines.
 4. Supports search on generated images.
 5. Supports custom presets. (used for specifying parameters, keywords, negative keywords.)
+6. UI for testing / exploration.
 
 ## Feature Roadmap
 
@@ -39,4 +40,3 @@ Fastcasso will also support other types of image generation / fine tune / asset 
 - Custom Model Training.
 - Queued Jobs.
 - In and Out painting.
-- Frontend for testing / exploration.
