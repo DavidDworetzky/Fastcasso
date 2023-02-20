@@ -9,6 +9,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { Buffer } from 'buffer';
 import SearchBar from '../Components/Search/Search';
+import PaginationBar from '../Components/Search/Pagination';
 
 function Home() {
     const mockTiles = [
@@ -22,16 +23,19 @@ function Home() {
     //set state hook of tile data
     const [tileData, setTileData] = React.useState<TileProperties[]>(mockTiles);
     const [searchTerm, setSearchTerm] = React.useState<string>(' ');
+    const [elements, setElements] = React.useState<number>(10);
+    const [page, setPage] = React.useState<number>(0);
 
-    const onSearchClick = () => {
+    const onSearchClick = (event: any, passedPage: number | null) => {
         const term = searchTerm;
 
         //get home images
-        const homeImages = SearchImages(term);
+        const homeImages = SearchImages(term, passedPage ?? page);
         //get image contents from image stubs
         homeImages.then((result) => {
+            setElements(result.count);
             let imageStubs = [] as Array<any>;
-            let promises = result.map((ele) => {
+            let promises = result.images.map((ele) => {
                 imageStubs.push(ele);
                 return GetImageById(ele.id);
             });
@@ -58,13 +62,20 @@ function Home() {
     useEffect(() => {
         onTermChange(searchTerm);
     }, []);
+
+    const onPageChange = (page: number) => {
+        setPage(page);
+        onSearchClick(null, page);
+    }
     const searchBarProperties = { onChange: onTermChange, onClick: onSearchClick};
     const tileGridProperties = { tiles: tileData };
+    const paginationProperties = {elementCount: elements, pageSize: 10, onPageChange : onPageChange};
 
     return (
         <React.Fragment>
             <SearchBar {...searchBarProperties} />
             <TileGrid {...tileGridProperties} />
+            <PaginationBar {...paginationProperties} />
         </React.Fragment>
     )
 
