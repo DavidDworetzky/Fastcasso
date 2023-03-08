@@ -51,6 +51,16 @@ export function GenerateImage(request: GenerateRequest){
     });
 }
 
+export function GenerateTransform(request: GenerateTransformRequest)
+{
+    const encodedPrompt = encodeURIComponent(request.prompt);
+    const encodedName = encodeURIComponent(request.name);
+    const url = `${root}/image/generate/transform/${encodedPrompt}/${encodedName}/${request.image_id.toString()}`;
+    return axios.get(url, {
+        responseType: 'arraybuffer'
+    });
+}
+
 export function GetPresets() : Promise<Array<Preset>> {
     const presets = new Promise<Array<Preset>>((resolve, reject) => {
         const presetPromise = axios.get(`${root}/presets`);
@@ -79,6 +89,13 @@ export interface GenerateRequest {
     negative_prompt: string;
     height: number;
     width: number;
+}
+
+export interface GenerateTransformRequest {
+    prompt: string;
+    name: string;
+    transform_type: string;
+    image_id: number;
 }
 
 export interface ImageStub {
