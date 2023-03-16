@@ -5,6 +5,7 @@ import Navigation from './navigation';
 import Home from './Home/Home';
 import Search from './Search/Search';
 import Generate from './Generate/Generate';
+import Transform from './Transform/Transform';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
             <Route path="/" element={<Home/>}/>
             <Route path="/search" element={<Search/>}/>
             <Route path="/generate" element={<Generate/>}/>
+            <Route path="/transform" element={<Transform/>}/>
           </Routes>
         </BrowserRouter>
 

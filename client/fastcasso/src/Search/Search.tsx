@@ -47,7 +47,8 @@ function Home() {
                     const selectedStub = imageStubs[counter];
                     counter++;
                     const base64 = Buffer.from(ele.data, 'binary').toString('base64')
-                    return new TileData(base64, selectedStub.id, tileDimension, tileDimension);
+                    const image_id = parseInt(selectedStub.id);
+                    return new TileData(base64, selectedStub.id, tileDimension, tileDimension, true, image_id);
                 });
                 setTileData(tileData);
             })

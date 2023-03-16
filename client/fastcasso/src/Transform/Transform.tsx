@@ -1,35 +1,60 @@
-import { TileProperties } from '../Components/Tile/Tile';
 import Tile from '../Components/Tile/Tile';
-import TileGrid from '../Components/Tile/TileGrid';
-import { TileGridProperties } from '../Components/Tile/TileGrid';
 import { TileData } from '../Components/Tile/Tile';
 import BlackSquare from '../black_square.jpg'
-import { GetHomeImages, GetImageById } from '../Client/resources';
 import React from 'react';
 import { useEffect } from 'react';
 import { Buffer } from 'buffer';
 import { GetPresets, Preset } from '../Client/resources';
 import Select from '../Components/Form/Select';
 import { Option } from '../Components/Form/Select';
-import { GenerateRequest } from '../Client/resources';
-import { GenerateImage } from '../Client/resources';
+import { GenerateTransform, GetImageById } from '../Client/resources';
+import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-function Generate() {
+///
+/// Transform
+/// Transforms work by taking an input image and applying a transformation to it.
+/// The transformation is then saved, and the output of the transform is returned.
+/// This is a two - tile before and after view.
+///
+function Transform() {
+
+    //get image id from route
+    const searchRouteParams = new URLSearchParams(useLocation().search);
+    const image_id = searchRouteParams.get("image_id");
+
+    const transformTypes = [{
+        name: 'Pix2Pix',
+    }]
+
     const tileDimension = 512;
     const mockTile = new TileData(BlackSquare, 'test', tileDimension, tileDimension, false)
 
     const [tileData, setTileData] = React.useState<TileData>(mockTile);
+    const [transformedTileData, setTransformedTileData] = React.useState<TileData>(mockTile);
     const [presets, setPresetData] = React.useState<Preset[]>([] as Preset[]);
-    const [generateData, setGenerateData] = React.useState<GenerateRequest>(
+    const [generateData, setGenerateData] = React.useState<TransformInput>(
     { 
         prompt: "", 
-        preset_id: 0, 
+        transform_type: transformTypes[0].name, 
         name: "", 
         height: 512, 
-        width: 512, 
-        negative_prompt: "" 
+        width: 512,
+        image_id: 0
     });
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const RetrievePrimaryImage = () => {
+
+        if (image_id) {
+            setGenerateData({ ...generateData, image_id: parseInt(image_id)})
+            return GetImageById(image_id);
+        }
+        //otherwise, throw an exception, no image id passed
+        throw new Error("No image id passed");
+    }
+        
     const onElementChange = (event: any) => {
         const numbers = ['width', 'height']
         const id = event.target.id;
@@ -38,24 +63,34 @@ function Generate() {
     }
 
     const onPresetChange = (event: any) => {
-        setGenerateData({ ...generateData, preset_id: parseInt(event.target.value) });
+        setGenerateData({ ...generateData, transform_type: event.target.value });
     }
 
-    const onGenerate = () => {
-        GenerateImage(generateData).then((result) => {
+    const onTransform = () => {
+        const generateTransformRequest = {
+            prompt: generateData.prompt,
+            name: generateData.name,
+            image_id: generateData.image_id,
+            transform_type: generateData.transform_type
+        }
+        GenerateTransform(generateTransformRequest).then((result) => {
             const base64 = Buffer.from(result.data, 'binary').toString('base64')
-            setTileData(new TileData(base64, 'result', tileDimension, tileDimension));
+            setTransformedTileData(new TileData(base64, 'result', tileDimension, tileDimension));
         });
     }
 
     useEffect(() => {
         //retrieve presets
         GetPresets().then((result) => {
-            setPresetData(result);
+            RetrievePrimaryImage().then((imageResult) => {
+                    const base64 = Buffer.from(imageResult.data, 'binary').toString('base64')
+                    setTileData(new TileData(base64, 'input', tileDimension, tileDimension));
+                });
+                setPresetData(result);
         });
     }, []);
-    const options = presets.map((preset) => { return { name: `${preset.preset_id}${preset.model_id}`, value: `${preset.preset_id}` } }) as Option[];
-    const selectProperties = { id: "preset", name: "preset", options: options, onChange: onPresetChange };
+    const transform_options = transformTypes.map((transform) => { return { name: transform.name, value: transform.name } }) as Option[];
+    const selectProperties = { id: "transform", name: "transform", options: transform_options, onChange: onPresetChange };
 
 
     return <React.Fragment>
@@ -73,12 +108,6 @@ function Generate() {
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="name" onChange={onElementChange} />
                 </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Negative Prompt
-                    </label>
-                    <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="negative_prompt" type="text" onChange={onElementChange} placeholder="ugly, distorted, bad anatomy, extra hands, extra feet, extra limbs" />
-                </div>
                 <Select {...selectProperties} />
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -93,15 +122,17 @@ function Generate() {
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="width" onChange={onElementChange} type="text" placeholder="width" />
                 </div>
                 <div className="flex items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={onGenerate}>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={onTransform}>
                         Generate
                     </button>
                 </div>
             </form>
+
         </div>
 
-        <div className="w-full">
+        <div className="w-full" id="Original">
             <Tile {...tileData} />
+            <Tile {...transformedTileData} />
             <p className="text-center text-gray-500 text-xs">
                 &copy;2023 Fastcasso. All rights reserved.
             </p>
@@ -112,4 +143,14 @@ function Generate() {
 
 }
 
-export default Generate;
+export default Transform;
+
+
+export interface TransformInput {
+    prompt: string;
+    transform_type: string;
+    name: string;
+    height: number;
+    width: number;
+    image_id: number;
+}
