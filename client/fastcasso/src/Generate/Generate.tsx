@@ -98,13 +98,13 @@ function Generate() {
                     </button>
                 </div>
             </form>
-            <p className="text-center text-gray-500 text-xs">
-                &copy;2023 Fastcasso. All rights reserved.
-            </p>
         </div>
 
         <div className="w-full">
             <Tile {...tileData} />
+            <p className="text-center text-gray-500 text-xs">
+                &copy;2023 Fastcasso. All rights reserved.
+            </p>
         </div>
 
 

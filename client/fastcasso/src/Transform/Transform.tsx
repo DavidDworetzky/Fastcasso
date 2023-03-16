@@ -35,8 +35,8 @@ function Transform() {
         transform_type: transformTypes[0].name, 
         name: "", 
         height: 512, 
-        width: 512, 
-        negative_prompt: "" 
+        width: 512,
+        image_id: 0
     });
 
     const [searchParams, setSearchParams] = useSearchParams();
@@ -47,6 +47,7 @@ function Transform() {
         const searchParams = new URLSearchParams(useLocation().search);
         const image_id = searchParams.get("image_id");
         if (image_id) {
+            setGenerateData({ ...generateData, image_id: parseInt(image_id)})
             return GetImageById(image_id);
         }
         //otherwise, throw an exception, no image id passed
@@ -106,12 +107,6 @@ function Transform() {
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="name" onChange={onElementChange} />
                 </div>
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Negative Prompt
-                    </label>
-                    <input className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="negative_prompt" type="text" onChange={onElementChange} placeholder="ugly, distorted, bad anatomy, extra hands, extra feet, extra limbs" />
-                </div>
                 <Select {...selectProperties} />
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -131,17 +126,15 @@ function Transform() {
                     </button>
                 </div>
             </form>
-            <p className="text-center text-gray-500 text-xs">
-                &copy;2023 Fastcasso. All rights reserved.
-            </p>
+
         </div>
 
         <div className="w-full" id="Original">
             <Tile {...tileData} />
-        </div>
-
-        <div className="w-full" id="Transformed">
             <Tile {...transformedTileData} />
+            <p className="text-center text-gray-500 text-xs">
+                &copy;2023 Fastcasso. All rights reserved.
+            </p>
         </div>
 
 
@@ -158,5 +151,5 @@ export interface TransformInput {
     name: string;
     height: number;
     width: number;
-    negative_prompt: string;
+    image_id: number;
 }
