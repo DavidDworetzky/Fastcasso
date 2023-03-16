@@ -32,6 +32,7 @@ Fastcasso will also support other types of image generation / fine tune / asset 
 4. Supports search on generated images.
 5. Supports custom presets. (used for specifying parameters, keywords, negative keywords.)
 6. UI for testing / exploration.
+7. Transform UI for performing Pix2pix operations on existing images.
 
 ## Feature Roadmap
 
@@ -40,3 +41,4 @@ Fastcasso will also support other types of image generation / fine tune / asset 
 - Custom Model Training.
 - Queued Jobs.
 - In and Out painting.
+- Advanced Image Editing.
