@@ -19,6 +19,10 @@ import { useLocation } from 'react-router-dom';
 ///
 function Transform() {
 
+    //get image id from route
+    const searchRouteParams = new URLSearchParams(useLocation().search);
+    const image_id = searchRouteParams.get("image_id");
+
     const transformTypes = [{
         name: 'Pix2Pix',
     }]
@@ -40,12 +44,9 @@ function Transform() {
     });
 
     const [searchParams, setSearchParams] = useSearchParams();
-    const image_id = searchParams.get("image_id")
 
     const RetrievePrimaryImage = () => {
-        //get image id from route
-        const searchParams = new URLSearchParams(useLocation().search);
-        const image_id = searchParams.get("image_id");
+
         if (image_id) {
             setGenerateData({ ...generateData, image_id: parseInt(image_id)})
             return GetImageById(image_id);
@@ -88,8 +89,8 @@ function Transform() {
                 setPresetData(result);
         });
     }, []);
-    const options = presets.map((preset) => { return { name: `${preset.preset_id}${preset.model_id}`, value: `${preset.preset_id}` } }) as Option[];
-    const selectProperties = { id: "transform", name: "transform", options: options, onChange: onPresetChange };
+    const transform_options = transformTypes.map((transform) => { return { name: transform.name, value: transform.name } }) as Option[];
+    const selectProperties = { id: "transform", name: "transform", options: transform_options, onChange: onPresetChange };
 
 
     return <React.Fragment>
