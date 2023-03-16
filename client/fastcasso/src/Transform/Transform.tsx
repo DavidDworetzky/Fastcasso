@@ -7,8 +7,9 @@ import { Buffer } from 'buffer';
 import { GetPresets, Preset } from '../Client/resources';
 import Select from '../Components/Form/Select';
 import { Option } from '../Components/Form/Select';
-import { GenerateTransform } from '../Client/resources';
+import { GenerateTransform, GetImageById } from '../Client/resources';
 import { useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 ///
 /// Transform
@@ -21,10 +22,12 @@ function Transform() {
     const transformTypes = [{
         name: 'Pix2Pix',
     }]
+
     const tileDimension = 512;
     const mockTile = new TileData(BlackSquare, 'test', tileDimension, tileDimension, false)
 
     const [tileData, setTileData] = React.useState<TileData>(mockTile);
+    const [transformedTileData, setTransformedTileData] = React.useState<TileData>(mockTile);
     const [presets, setPresetData] = React.useState<Preset[]>([] as Preset[]);
     const [generateData, setGenerateData] = React.useState<TransformInput>(
     { 
@@ -39,6 +42,17 @@ function Transform() {
     const [searchParams, setSearchParams] = useSearchParams();
     const image_id = searchParams.get("image_id")
 
+    const RetrievePrimaryImage = () => {
+        //get image id from route
+        const searchParams = new URLSearchParams(useLocation().search);
+        const image_id = searchParams.get("image_id");
+        if (image_id) {
+            return GetImageById(image_id);
+        }
+        //otherwise, throw an exception, no image id passed
+        throw new Error("No image id passed");
+    }
+        
     const onElementChange = (event: any) => {
         const numbers = ['width', 'height']
         const id = event.target.id;
@@ -50,7 +64,7 @@ function Transform() {
         setGenerateData({ ...generateData, transform_type: event.target.value });
     }
 
-    const onGenerate = () => {
+    const onTransform = () => {
         const generateTransformRequest = {
             prompt: generateData.prompt,
             name: generateData.name,
@@ -59,14 +73,18 @@ function Transform() {
         }
         GenerateTransform(generateTransformRequest).then((result) => {
             const base64 = Buffer.from(result.data, 'binary').toString('base64')
-            setTileData(new TileData(base64, 'result', tileDimension, tileDimension));
+            setTransformedTileData(new TileData(base64, 'result', tileDimension, tileDimension));
         });
     }
 
     useEffect(() => {
         //retrieve presets
         GetPresets().then((result) => {
-            setPresetData(result);
+            RetrievePrimaryImage().then((imageResult) => {
+                    const base64 = Buffer.from(imageResult.data, 'binary').toString('base64')
+                    setTileData(new TileData(base64, 'input', tileDimension, tileDimension));
+                });
+                setPresetData(result);
         });
     }, []);
     const options = presets.map((preset) => { return { name: `${preset.preset_id}${preset.model_id}`, value: `${preset.preset_id}` } }) as Option[];
@@ -108,7 +126,7 @@ function Transform() {
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="width" onChange={onElementChange} type="text" placeholder="width" />
                 </div>
                 <div className="flex items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={onGenerate}>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={onTransform}>
                         Generate
                     </button>
                 </div>
@@ -118,8 +136,12 @@ function Transform() {
             </p>
         </div>
 
-        <div className="w-full">
+        <div className="w-full" id="Original">
             <Tile {...tileData} />
+        </div>
+
+        <div className="w-full" id="Transformed">
+            <Tile {...transformedTileData} />
         </div>
 
 
