@@ -69,7 +69,7 @@ function Transform() {
         const generateTransformRequest = {
             prompt: generateData.prompt,
             name: generateData.name,
-            image_id: parseInt(image_id ?? "0"),
+            image_id: generateData.image_id,
             transform_type: generateData.transform_type
         }
         GenerateTransform(generateTransformRequest).then((result) => {
