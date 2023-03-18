@@ -59,6 +59,12 @@ function Home() {
         const unpackedTerm = typeof term === 'string' ? term : term.target.value;
         setSearchTerm(unpackedTerm);
     }
+
+    const onKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            onSearchClick(null, null);
+        }
+    }
     //load of search images
     useEffect(() => {
         onTermChange(searchTerm);
@@ -68,9 +74,9 @@ function Home() {
         setPage(page);
         onSearchClick(null, page);
     }
-    const searchBarProperties = { onChange: onTermChange, onClick: onSearchClick};
+    const searchBarProperties = { onChange: onTermChange, onClick: onSearchClick, onKeyDown : onKeyDown };
     const tileGridProperties = { tiles: tileData };
-    const paginationProperties = {elementCount: elements, pageSize: 10, onPageChange : onPageChange};
+    const paginationProperties = { elementCount: elements, pageSize: 10, onPageChange: onPageChange };
 
     return (
         <React.Fragment>

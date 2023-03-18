@@ -5,6 +5,7 @@ export default function SearchBar(props: SearchBarProperties) {
         <div className="flex items-center">
             <div className="flex space-x-1">
                 <input
+                    onKeyDown={props.onKeyDown}
                     onChange={props.onChange}
                     type="text"
                     className="block w-full px-4 py-2 text-purple-700 bg-white border rounded-full focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -34,4 +35,5 @@ export default function SearchBar(props: SearchBarProperties) {
 export interface SearchBarProperties {
     onChange: any;
     onClick: any;
+    onKeyDown?: any;
 }
