@@ -4,6 +4,7 @@ from starlette.responses import StreamingResponse
 from fastapi.responses import StreamingResponse as FastAPIStreamingResponse
 from typing import Union, List, Optional
 from app.pipelines.stable_diffusion import StableDiffusion
+from app.pipelines.stable_diffusion_xl import StableDiffusionXL
 from app.pipelines.instruct_pix2pix import InstructPix2Pix
 from app.models import settings
 from app.models.database.database import Session
@@ -14,6 +15,8 @@ from app.models.image_generation import ImageGenerationStub
 from app.mediators.presets import get_presets
 from PIL import Image as PILImage
 import zipfile
+
+sdxl_model_ids = ["stabilityai/stable-diffusion-xl-base-1.0"]
 
 def generate_image_diffusion(image_input: ImageInput, settings: settings.Settings, preset_id: Optional[int] = None) -> Union[StreamingResponse, str]:
     """
@@ -53,6 +56,13 @@ def generate_image_diffusion(image_input: ImageInput, settings: settings.Setting
         #generate image
         stable_diffusion = (
         StableDiffusion(
+            model_id, 
+            settings.simple_diffusion_device, 
+            settings.safety_check,
+            inference_steps
+            )
+        ) if model_id not in sdxl_model_ids else (
+            StableDiffusionXL(
             model_id, 
             settings.simple_diffusion_device, 
             settings.safety_check,
