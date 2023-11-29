@@ -28,7 +28,7 @@ class StableDiffusionXL:
             ).to("cuda")
 
             prompt = image_input.prompt
-            image = pipeline_text2image(prompt=prompt).images[0]
+            image = pipeline_text2image(prompt=prompt, width = image_input.width, height = image_input.height, negative_prompt=image_input.negative_prompt, guidance_scale=self.guidance_scale, num_inference_steps = self.num_inference_steps).images[0]
             return image
         except Exception as ex:
             self.log_pipeline_error(ex)
